@@ -1,1 +1,19 @@
 services:
+  KonselingHub-postgres:
+    container_name: KonselingHub-postgres
+    image: postgres:16.2
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=database
+      - POSTGRES_USER=user
+
+  konseling-hub-redis:
+    container_name: konseling-hub-redis
+    image: redis:6
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    volumes:
+      - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
