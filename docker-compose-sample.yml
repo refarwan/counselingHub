@@ -17,3 +17,18 @@ services:
       - 6379:6379
     volumes:
       - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
+
+  konseling-hub-api:
+    build:
+      context: ./konseling-hub-api
+      dockerfile: Dockerfile
+    depends_on:
+      - konseling-hub-postgres
+      - konseling-hub-redis
+    image: konseling-hub-api:1.0.0
+    container_name: konseling-hub-api
+    environment:
+      - APP_PORT=9000
+    ports:
+      - 9000:9000
+    command: sh -c "until nc -z konseling-hub-postgres 5432 && nc -z konseling-hub-redis 6379; do echo 'Waiting for konseling-hub-postgres and konseling-hub-redis'; sleep 1; done; npm run build; npm start;"
