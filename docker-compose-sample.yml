@@ -31,16 +31,16 @@ services:
       - APP_PORT=9000
     ports:
       - 9000:9000
-    command: sh -c "until nc -z konseling-hub-postgres 5432 && nc -z konseling-hub-redis 6379; do echo 'Waiting for konseling-hub-postgres and konseling-hub-redis'; sleep 1; done; npm run build; npm start;"
 
-  konseling-hub-hub:
+  konseling-hub-app:
     build:
-      context: ./konseling-hub
+      context: ./konseling-hub-app
       dockerfile: Dockerfile
+      args:
+        - API_HOST=https://www.api-url.com
     depends_on:
       - konseling-hub-api
-    image: konseling-hub:1.0.0
-    container_name: konseling-hub
+    image: konseling-hub-app:1.0.0
+    container_name: konseling-hub-app
     ports:
       - 3000:3000
-    command: sh -c "until nc -z konseling-hub-api 9000; do echo 'Waiting for konseling-hub-api'; sleep 1; done; npm run build; npm start;"
