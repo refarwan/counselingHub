@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 
 import { Poppins } from "next/font/google";
@@ -21,7 +20,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="in">
-			<body className={poppins.className}>{children}</body>
+			<body className={poppins.className + " text-slate-950 bg-white"}>
+				{children}
+			</body>
 		</html>
 	);
 }
