@@ -2,14 +2,12 @@
 
 import Button from "@/components/Button";
 import TextField from "@/components/Textfiled";
+
 import Link from "next/link";
 
-import { useState } from "react";
 import { MdHeadphones } from "react-icons/md";
 
 const Page = () => {
-	const [email, setEmail] = useState<string>("");
-
 	return (
 		<>
 			<main className="px-[16px] pt-[56px]">
@@ -25,20 +23,21 @@ const Page = () => {
 						<p>Masuk dan gunakan akun kamu</p>
 					</div>
 					<TextField
-						label="Email atau nomor telepon"
-						setStateAction={setEmail}
+						type="text"
 						name="email"
+						label="Email atau nomor telepon"
 					/>
-					<TextField
-						label="Kata sandi"
-						setStateAction={setEmail}
-						name="password"
-					/>
+					<TextField type="password" name="password" label="Kata sandi" />
 					<Link href={"/lupa-sandi"} className="text-sky-600">
 						Lupa Sandi?
 					</Link>
 					<div className="flex justify-end gap-[16px]">
-						<Button type="text">Daftar</Button>
+						<Link
+							href={"/daftar"}
+							className="inline-block h-[40px] px-[24px] leading-[40px] rounded-[20px] text-sky-500 hover:bg-sky-50 focus:bg-sky-100 active:bg-sky-200"
+						>
+							Daftar
+						</Link>
 						<Button>Masuk</Button>
 					</div>
 				</div>

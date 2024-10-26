@@ -10,10 +10,11 @@ import {
 import { MdError } from "react-icons/md";
 
 type Props = {
-	label?: string;
+	type?: string;
 	name?: string;
-	placeholder?: string;
 	value?: string;
+	placeholder?: string;
+	label?: string;
 	supporting?: string;
 	leadingIcon?: ComponentType<{ className?: string; size?: number }>;
 	disabled?: boolean;
@@ -22,10 +23,11 @@ type Props = {
 };
 
 const TextField = ({
-	label,
+	type = "text",
 	name,
-	placeholder,
 	value = "",
+	placeholder,
+	label,
 	supporting,
 	leadingIcon: LeadingIcon,
 	disabled = false,
@@ -91,7 +93,7 @@ const TextField = ({
 					<LeadingIcon size={24} className={disabled ? "fill-slate-400" : ""} />
 				) : null}
 				<input
-					type="text"
+					type={type}
 					name={name}
 					ref={refInput}
 					placeholder={placeholder}
