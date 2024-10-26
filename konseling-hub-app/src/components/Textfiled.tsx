@@ -75,14 +75,14 @@ const TextField = ({
 					(!disabled && isActive && !isError
 						? " border-sky-500"
 						: " border-slate-950") +
-					(!disabled && (isActive || currentValue)
+					(!disabled && isActive
 						? " border-[2px] pr-[14px]"
 						: " border pr-[15px]") +
 					(LeadingIcon
-						? !disabled && (isActive || currentValue)
+						? !disabled && isActive
 							? " pl-[10px]"
 							: " pl-[11px]"
-						: !disabled && (isActive || currentValue)
+						: !disabled && isActive
 						? " pl-[14px]"
 						: " pl-[15px]") +
 					(isError ? " border-red-700" : "")
