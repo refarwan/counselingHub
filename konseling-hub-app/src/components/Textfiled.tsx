@@ -52,7 +52,7 @@ const TextField = ({
 			{label ? (
 				<div
 					className={
-						"h-[24px] absolute transition-[top_left]" +
+						"h-[24px] absolute transition-[font-size,_left,_top,_padding]" +
 						(disabled ? " bg-slate-100" : " bg-white") +
 						(disabled ? " text-slate-400" : "") +
 						(!disabled && isError && (isActive || currentValue)
