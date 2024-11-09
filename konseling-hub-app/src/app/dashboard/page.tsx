@@ -2,6 +2,8 @@
 
 import TopAppBar from "@/components/TopAppBar";
 import NavigationBar from "@/components/NavigationBar";
+import TextField from "@/components/Textfiled";
+
 import { useState } from "react";
 
 const Page = () => {
@@ -26,7 +28,7 @@ const Page = () => {
 			/>
 			<main
 				className={
-					"mt-[64px] duration-75 bg-red-100 h-[1000px] " +
+					"mt-[64px] duration-75 h-[1000px] " +
 					(minimize ? "xl:ml-[80px]" : "xl:ml-[250px]")
 				}
 			>

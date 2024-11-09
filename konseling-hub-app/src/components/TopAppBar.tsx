@@ -31,7 +31,7 @@ const TopAppBar = ({
 				>
 					<FaBars size={24} />
 				</button>
-				<div className="flex-1">
+				<div className="flex-1 flex items-center">
 					<Link href={"/"} className="w-max text-sky-600 flex items-center">
 						<FaHeadphones size={24} />{" "}
 						<span>
