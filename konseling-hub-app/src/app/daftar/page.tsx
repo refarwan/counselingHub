@@ -5,7 +5,7 @@ import TextField from "@/components/Textfiled";
 
 import Link from "next/link";
 
-import { MdHeadphones } from "react-icons/md";
+import { FaHeadphones } from "react-icons/fa6";
 
 const Page = () => {
 	return (
@@ -13,7 +13,7 @@ const Page = () => {
 			<main className="px-[16px] pt-[56px]">
 				<div className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto">
 					<div className="text-sky-600 flex flex-col items-center">
-						<MdHeadphones size={48} />
+						<FaHeadphones size={48} />
 						<span className="text-[30px]">
 							<span className="font-bold">Teman</span>Dengar
 						</span>
@@ -25,7 +25,13 @@ const Page = () => {
 					<TextField type="text" name="fullname" label="Nama lengkap" />
 					<TextField type="email" name="email" label="Email" />
 					<TextField type="password" name="password" label="Sandi" />
-					<TextField type="password" name="confirm" label="Konfirmasi" />
+					<TextField
+						type="password"
+						name="confirm"
+						label="Konfirmasi"
+						isError={true}
+						supporting="Test"
+					/>
 					<span className="text-[12px]">
 						Dengan mendaftar, saya menyetujui{" "}
 						<Link href={"/syarat-dan-ketentuan"} className="text-sky-600">

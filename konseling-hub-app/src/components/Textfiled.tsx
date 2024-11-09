@@ -7,7 +7,8 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { MdError } from "react-icons/md";
+
+import { FaExclamationCircle } from "react-icons/fa";
 
 type Props = {
 	type?: string;
@@ -119,7 +120,7 @@ const TextField = ({
 						(!disabled && isError ? " text-red-700" : " pl-[16px]")
 					}
 				>
-					{!disabled && isError ? <MdError size={16} /> : null}
+					{!disabled && isError ? <FaExclamationCircle size={16} /> : null}
 					{supporting}
 				</div>
 			) : null}
