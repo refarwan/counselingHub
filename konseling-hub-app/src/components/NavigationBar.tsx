@@ -30,6 +30,7 @@ const NavigationBar = ({
 					(minimize ? " xl:px-[10px]" : "") +
 					(show ? " left-0" : " left-[-250px] xl:left-0")
 				}
+				onClick={(event) => event.stopPropagation()}
 			>
 				<div
 					className={
