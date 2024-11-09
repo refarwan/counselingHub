@@ -1,10 +1,11 @@
 import TopAppBar from "@/components/TopAppBar";
+import NavigationBar from "@/components/NavigationBar";
 
 const Page = () => {
 	return (
 		<>
 			<TopAppBar />
-			Dashboard
+			<NavigationBar />
 		</>
 	);
 };
