@@ -16,12 +16,12 @@ const TopAppBar = ({ children }: { children?: ReactNode }) => {
 	const [showMenu, setSHowMenu] = useState<boolean>(false);
 	return (
 		<>
-			<header className="bg-white w-full h-[64px] flex justify-between items-center gap-[16px] px-[8px] sm:px-[16px] relative">
+			<header className="bg-white border-b border-b-slate-200 w-full h-[64px] flex justify-between items-center gap-[16px] px-[8px] sm:px-[16px] fixed top-0 left-0">
 				<button className="w-[40px] h-[40px] grid place-content-center">
 					<FaBars size={24} />
 				</button>
 				<div className="flex-1">
-					<Link href={"/"} className="text-sky-600 flex items-center">
+					<Link href={"/"} className="w-max text-sky-600 flex items-center">
 						<FaHeadphones size={24} />{" "}
 						<span>
 							<span className="font-bold">Teman</span>
@@ -46,7 +46,7 @@ const TopAppBar = ({ children }: { children?: ReactNode }) => {
 				>
 					<Link
 						href={"/"}
-						className="flex px-[12px] py-[8px] gap-[12px] border-b border-slate-100 base-link"
+						className="flex px-[12px] py-[8px] gap-[12px] border-b border-slate-200 base-link"
 					>
 						<div className="bg-red-700 h-[40px] w-[40px] rounded-full"></div>
 						<div>
