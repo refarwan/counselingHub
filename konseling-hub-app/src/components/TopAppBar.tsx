@@ -12,12 +12,23 @@ import {
 	FaRightFromBracket,
 } from "react-icons/fa6";
 
-const TopAppBar = ({ children }: { children?: ReactNode }) => {
+const TopAppBar = ({
+	togleMenu,
+	children,
+}: {
+	togleMenu?: () => void;
+	children?: ReactNode;
+}) => {
 	const [showMenu, setSHowMenu] = useState<boolean>(false);
 	return (
 		<>
 			<header className="bg-white border-b border-b-slate-200 w-full h-[64px] flex justify-between items-center gap-[16px] px-[8px] sm:px-[16px] fixed top-0 left-0">
-				<button className="w-[40px] h-[40px] grid place-content-center">
+				<button
+					className="w-[40px] h-[40px] grid place-content-center"
+					onClick={() => {
+						togleMenu ? togleMenu() : null;
+					}}
+				>
 					<FaBars size={24} />
 				</button>
 				<div className="flex-1">
