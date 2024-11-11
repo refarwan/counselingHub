@@ -26,7 +26,7 @@ const TopAppBar = ({
 				<button
 					className="w-[40px] h-[40px] grid place-content-center"
 					onClick={() => {
-						togleMenu ? togleMenu() : null;
+						if (togleMenu) togleMenu();
 					}}
 				>
 					<FaBars size={24} />

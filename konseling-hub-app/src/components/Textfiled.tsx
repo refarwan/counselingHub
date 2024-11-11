@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import { FaExclamationCircle } from "react-icons/fa";
+import clsx from "clsx";
 
 type Props = {
 	type?: string;
@@ -70,24 +71,24 @@ const TextField = ({
 				</div>
 			) : null}
 			<div
-				className={
-					"h-[56px] rounded overflow-hidden flex items-center gap-[16px] cursor-text" +
-					(disabled ? " border-slate-400 bg-slate-100" : "") +
-					(!disabled && isActive && !isError
-						? " border-sky-500"
-						: " border-slate-950") +
-					(!disabled && isActive
+				className={`h-[56px] rounded overflow-hidden flex items-center gap-[16px] cursor-text ${
+					!disabled && isActive
 						? " border-[2px] pr-[14px]"
-						: " border pr-[15px]") +
-					(LeadingIcon
+						: " border pr-[15px]"
+				} ${
+					LeadingIcon
 						? !disabled && isActive
 							? " pl-[10px]"
 							: " pl-[11px]"
 						: !disabled && isActive
 						? " pl-[14px]"
-						: " pl-[15px]") +
-					(isError ? " border-red-700" : "")
-				}
+						: " pl-[15px]"
+				} ${clsx({
+					"border-slate-950": !disabled && !isError && !isActive,
+					"border-slate-400 bg-slate-100": disabled,
+					"border-red-700": !disabled && isError,
+					"border-sky-500": !disabled && !isError && isActive,
+				})}`}
 				onClick={focus}
 			>
 				{LeadingIcon ? (
@@ -114,13 +115,13 @@ const TextField = ({
 			</div>
 			{supporting ? (
 				<div
-					className={
-						"text-[12px] pr-[16px] flex gap-[8px] items-center" +
-						(disabled ? " text-slate-400" : "") +
-						(!disabled && isError ? " text-red-700" : " pl-[16px]")
-					}
+					className={`text-[12px] pr-[16px] flex gap-[8px] items-center ${clsx(
+						disabled && " text-slate-400",
+						!isError && " pl-[16px]",
+						isError && !disabled && " text-red-700"
+					)}`}
 				>
-					{!disabled && isError ? <FaExclamationCircle size={16} /> : null}
+					{isError ? <FaExclamationCircle size={16} /> : null}
 					{supporting}
 				</div>
 			) : null}

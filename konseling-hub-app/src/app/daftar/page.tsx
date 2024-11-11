@@ -25,13 +25,7 @@ const Page = () => {
 					<TextField type="text" name="fullname" label="Nama lengkap" />
 					<TextField type="email" name="email" label="Email" />
 					<TextField type="password" name="password" label="Sandi" />
-					<TextField
-						type="password"
-						name="confirm"
-						label="Konfirmasi"
-						isError={true}
-						supporting="Test"
-					/>
+					<TextField type="password" name="confirm" label="Konfirmasi" />
 					<span className="text-[12px]">
 						Dengan mendaftar, saya menyetujui{" "}
 						<Link href={"/syarat-dan-ketentuan"} className="text-sky-600">
