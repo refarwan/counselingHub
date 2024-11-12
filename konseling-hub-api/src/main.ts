@@ -1,7 +1,7 @@
 import { AppModule } from "./app.module";
 
 import { NestFactory } from "@nestjs/core";
-import { BadRequestException, ValidationPipe } from "@nestjs/common";
+import { BadRequestException, Logger, ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -25,6 +25,16 @@ async function bootstrap() {
 			},
 		}),
 	);
+
+	try {
+		const allowedOrigin = JSON.parse(process.env.ALLOWED_ORIGIN);
+		if (typeof allowedOrigin !== "object") throw new Error();
+	} catch (error) {
+		Logger.error(
+			'wrong ALLOWED_ORIGIN value in environment variable (sample: ["https://www.frontend-1.com", "https://www.frontend-2.com"])',
+		);
+		process.exit(1);
+	}
 
 	await app.listen(9000);
 }

@@ -4,6 +4,7 @@ import {
 	ComponentType,
 	Dispatch,
 	SetStateAction,
+	useEffect,
 	useRef,
 	useState,
 } from "react";
@@ -17,11 +18,12 @@ type Props = {
 	value?: string;
 	placeholder?: string;
 	label?: string;
-	supporting?: string;
+	supporting?: string | string[];
 	leadingIcon?: ComponentType<{ className?: string; size?: number }>;
 	disabled?: boolean;
 	isError?: boolean;
 	setStateAction?: Dispatch<SetStateAction<string>>;
+	onChange?: () => void;
 };
 
 const TextField = ({
@@ -35,10 +37,15 @@ const TextField = ({
 	disabled = false,
 	isError = false,
 	setStateAction,
+	onChange,
 }: Props) => {
 	const [isActive, setIsActive] = useState<boolean>(false);
 	const refInput = useRef<HTMLInputElement>(null);
 	const [currentValue, setCurrentValue] = useState<string>(value);
+
+	useEffect(() => {
+		setCurrentValue(value);
+	}, [value]);
 
 	const focus = () => {
 		if (!disabled) {
@@ -108,22 +115,39 @@ const TextField = ({
 					onChange={(event) => {
 						setCurrentValue(event.target.value);
 						if (setStateAction) setStateAction(event.target.value);
+						if (onChange) onChange();
 					}}
 					value={currentValue}
 					disabled={disabled}
 				/>
 			</div>
 			{supporting ? (
-				<div
-					className={`text-[12px] pr-[16px] flex gap-[8px] items-center ${clsx(
-						disabled && " text-slate-400",
-						!isError && " pl-[16px]",
-						isError && !disabled && " text-red-700"
-					)}`}
-				>
-					{isError ? <FaExclamationCircle size={16} /> : null}
-					{supporting}
-				</div>
+				typeof supporting === "string" ? (
+					<div
+						className={`text-[12px] pr-[16px] flex gap-[8px] items-center ${clsx(
+							disabled && " text-slate-400",
+							!isError && " pl-[16px]",
+							isError && !disabled && " text-red-700"
+						)}`}
+					>
+						{isError ? <FaExclamationCircle size={16} /> : null}
+						{supporting}
+					</div>
+				) : (
+					supporting.map((item, index) => (
+						<div
+							key={index}
+							className={`text-[12px] pr-[16px] flex gap-[8px] items-center ${clsx(
+								disabled && " text-slate-400",
+								!isError && " pl-[16px]",
+								isError && !disabled && " text-red-700"
+							)}`}
+						>
+							{isError ? <FaExclamationCircle size={16} /> : null}
+							{item}
+						</div>
+					))
+				)
 			) : null}
 		</div>
 	);

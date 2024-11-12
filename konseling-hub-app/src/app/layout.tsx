@@ -1,6 +1,9 @@
-import type { Metadata } from "next";
+import LoadingBarProvider from "@/components/LoadingBarContext";
 import "./globals.css";
 
+import { ReactNode } from "react";
+
+import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 
 export const metadata: Metadata = {
@@ -13,16 +16,14 @@ const poppins = Poppins({
 	subsets: ["latin"],
 });
 
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
+const Layout = ({ children }: { children: ReactNode }) => {
 	return (
 		<html lang="in">
 			<body className={poppins.className + " text-slate-950 bg-white"}>
-				{children}
+				<LoadingBarProvider>{children}</LoadingBarProvider>
 			</body>
 		</html>
 	);
-}
+};
+
+export default Layout;
