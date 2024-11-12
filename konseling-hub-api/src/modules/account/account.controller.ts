@@ -9,6 +9,6 @@ export class AccountController {
 
 	@Post("register")
 	async register(@Body() body: RegisterDto): Promise<{ message: string }> {
-		return { message: "Register Account" };
+		return await this.accountService.register(body);
 	}
 }
