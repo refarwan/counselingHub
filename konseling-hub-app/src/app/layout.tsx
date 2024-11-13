@@ -1,5 +1,6 @@
-import LoadingBarProvider from "@/components/LoadingBarContext";
 import "./globals.css";
+import LoadingBarProvider from "@/components/LoadingBarContext";
+import PopupProvider from "@/components/PopupContext";
 
 import { ReactNode } from "react";
 
@@ -20,7 +21,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
 	return (
 		<html lang="in">
 			<body className={poppins.className + " text-slate-950 bg-white"}>
-				<LoadingBarProvider>{children}</LoadingBarProvider>
+				<LoadingBarProvider>
+					<PopupProvider>{children}</PopupProvider>
+				</LoadingBarProvider>
 			</body>
 		</html>
 	);
