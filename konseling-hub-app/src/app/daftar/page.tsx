@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/components/Button";
 import TextField from "@/components/Textfiled";
 import { axiosInstance } from "@/utils/axios-intance";
 import { useLoadingBarContext } from "@/components/LoadingBarContext";
@@ -151,13 +150,13 @@ const Page = () => {
 					</span>
 
 					<div>
-						<Button
-							className="ml-auto block"
+						<button
+							className="filled-button ml-auto block"
 							onClick={register}
 							disabled={isProcessing}
 						>
 							Daftar
-						</Button>
+						</button>
 					</div>
 				</div>
 			</main>

@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/components/Button";
 import TextField from "@/components/Textfiled";
 
 import Link from "next/link";
@@ -32,13 +31,10 @@ const Page = () => {
 						Lupa Sandi?
 					</Link>
 					<div className="flex justify-end gap-[16px]">
-						<Link
-							href={"/daftar"}
-							className="inline-block h-[40px] px-[24px] leading-[40px] rounded-[20px] text-sky-500 hover:bg-sky-50 focus:bg-sky-100 active:bg-sky-200"
-						>
+						<Link href={"/daftar"} className="text-button">
 							Daftar
 						</Link>
-						<Button>Masuk</Button>
+						<button className="filled-button">Masuk</button>
 					</div>
 				</div>
 			</main>
