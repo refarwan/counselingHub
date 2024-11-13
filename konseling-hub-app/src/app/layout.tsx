@@ -1,6 +1,7 @@
 import "./globals.css";
 import LoadingBarProvider from "@/components/LoadingBarContext";
 import PopupProvider from "@/components/PopupContext";
+import AxiosErrorHandlingProvider from "@/components/AxiosErrorHandlingContext";
 
 import { ReactNode } from "react";
 
@@ -22,7 +23,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
 		<html lang="in">
 			<body className={poppins.className + " text-slate-950 bg-white"}>
 				<LoadingBarProvider>
-					<PopupProvider>{children}</PopupProvider>
+					<PopupProvider>
+						<AxiosErrorHandlingProvider>{children}</AxiosErrorHandlingProvider>
+					</PopupProvider>
 				</LoadingBarProvider>
 			</body>
 		</html>

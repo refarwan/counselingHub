@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import TextField from "@/components/Textfiled";
 import { axiosInstance } from "@/utils/axios-intance";
 import { useLoadingBarContext } from "@/components/LoadingBarContext";
+import { useAxiosErrorHandlingContext } from "@/components/AxiosErrorHandlingContext";
 
 import { useState } from "react";
 
@@ -29,6 +30,7 @@ const Page = () => {
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
 	const { loadingBarStart, loadingBarStop } = useLoadingBarContext();
+	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
 
 	const register = async () => {
 		const errorInputTemp: ErrorInput = {};
@@ -64,7 +66,7 @@ const Page = () => {
 				setconfirmPassword("");
 			})
 			.catch((error: AxiosError) => {
-				setErrorInput(error.response?.data.message as ErrorInput);
+				axiosErrorHandling(error, setErrorInput);
 			});
 
 		loadingBarStop();
