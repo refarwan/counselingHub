@@ -27,7 +27,7 @@ const Page = () => {
 						label="Email atau nomor telepon"
 					/>
 					<TextField type="password" name="password" label="Kata sandi" />
-					<Link href={"/lupa-sandi"} className="text-sky-600">
+					<Link href={"/lupa-sandi"} className="w-max text-sky-600">
 						Lupa Sandi?
 					</Link>
 					<div className="flex justify-end gap-[16px]">
