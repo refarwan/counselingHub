@@ -107,10 +107,10 @@ const TextField = ({
 					ref={refInput}
 					placeholder={placeholder}
 					onBlur={() => setIsActive(false)}
+					onFocus={() => setIsActive(true)}
 					className={
 						"outline-none flex-1" +
-						(disabled ? " bg-slate-100 text-slate-400" : "") +
-						(isActive || currentValue ? " block" : " hidden")
+						(disabled ? " bg-slate-100 text-slate-400" : "")
 					}
 					onChange={(event) => {
 						setCurrentValue(event.target.value);
