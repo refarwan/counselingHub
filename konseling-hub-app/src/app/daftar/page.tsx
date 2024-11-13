@@ -4,10 +4,12 @@ import TextField from "@/components/Textfiled";
 import { axiosInstance } from "@/utils/axios-intance";
 import { useLoadingBarContext } from "@/components/LoadingBarContext";
 import { useAxiosErrorHandlingContext } from "@/components/AxiosErrorHandlingContext";
+import { usePopupContext } from "@/components/PopupContext";
 
 import { useState } from "react";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { AxiosError } from "axios";
 import { FaHeadphones } from "react-icons/fa6";
@@ -30,6 +32,8 @@ const Page = () => {
 
 	const { loadingBarStart, loadingBarStop } = useLoadingBarContext();
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
+	const { successAlertPopup } = usePopupContext();
+	const router = useRouter();
 
 	const register = async () => {
 		const errorInputTemp: ErrorInput = {};
@@ -58,7 +62,9 @@ const Page = () => {
 				confirmPassword,
 			})
 			.then((response) => {
-				alert(response.data.message);
+				successAlertPopup(response.data.message, () => {
+					router.push("/masuk");
+				});
 				setFullname("");
 				setEmail("");
 				setPassword("");
