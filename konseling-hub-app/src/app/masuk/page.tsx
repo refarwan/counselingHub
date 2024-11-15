@@ -4,17 +4,17 @@ import TextField from "@/components/Textfiled";
 
 import Link from "next/link";
 
-import { FaHeadphones } from "react-icons/fa6";
+import { BsPuzzleFill } from "react-icons/bs";
 
 const Page = () => {
 	return (
 		<>
 			<main className="px-[16px] pt-[56px]">
 				<div className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto">
-					<div className="text-sky-600 flex flex-col items-center">
-						<FaHeadphones size={48} />
+					<div className="text-sky-500 flex flex-col items-center">
+						<BsPuzzleFill size={48} />
 						<span className="text-[30px]">
-							<span className="font-bold">Teman</span>Dengar
+							Konseling<span className="font-bold">HUB</span>
 						</span>
 					</div>
 					<div className="flex gap-[5px] flex-col">
@@ -27,7 +27,7 @@ const Page = () => {
 						label="Email atau nomor telepon"
 					/>
 					<TextField type="password" name="password" label="Kata sandi" />
-					<Link href={"/lupa-sandi"} className="w-max text-sky-600">
+					<Link href={"/lupa-sandi"} className="w-max text-sky-500">
 						Lupa Sandi?
 					</Link>
 					<div className="flex justify-end gap-[16px]">

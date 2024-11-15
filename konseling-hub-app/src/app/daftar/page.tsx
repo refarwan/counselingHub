@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { AxiosError } from "axios";
-import { FaHeadphones } from "react-icons/fa6";
+import { BsPuzzleFill } from "react-icons/bs";
 
 const Page = () => {
 	const [fullname, setFullname] = useState<string>("");
@@ -90,10 +90,10 @@ const Page = () => {
 		<>
 			<main className="px-[16px] pt-[56px]">
 				<div className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto">
-					<div className="text-sky-600 flex flex-col items-center">
-						<FaHeadphones size={48} />
+					<div className="text-sky-500 flex flex-col items-center">
+						<BsPuzzleFill size={48} />
 						<span className="text-[30px]">
-							<span className="font-bold">Teman</span>Dengar
+							Konseling<span className="font-bold">HUB</span>
 						</span>
 					</div>
 					<div className="flex gap-[5px] flex-col">
@@ -146,11 +146,11 @@ const Page = () => {
 					/>
 					<span className="text-[12px]">
 						Dengan mendaftar, saya menyetujui{" "}
-						<Link href={"/syarat-dan-ketentuan"} className="text-sky-600">
+						<Link href={"/syarat-dan-ketentuan"} className="text-sky-500">
 							Syarat & Ketentuan
 						</Link>{" "}
 						serta{" "}
-						<Link href={"/kebijakan-privasi"} className="text-sky-600">
+						<Link href={"/kebijakan-privasi"} className="text-sky-500">
 							Kebijakan Privasi
 						</Link>
 					</span>

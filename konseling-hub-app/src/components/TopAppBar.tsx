@@ -6,12 +6,12 @@ import { ReactNode, useState } from "react";
 import {
 	FaBars,
 	FaAddressCard,
-	FaHeadphones,
 	FaUserGear,
 	FaKey,
 	FaRightFromBracket,
 	FaCircleUser,
 } from "react-icons/fa6";
+import { BsPuzzleFill } from "react-icons/bs";
 
 const TopAppBar = ({
 	togleMenu,
@@ -33,11 +33,12 @@ const TopAppBar = ({
 					<FaBars size={24} />
 				</button>
 				<div className="flex-1 flex items-center">
-					<Link href={"/"} className="w-max text-sky-600 flex items-center">
-						<FaHeadphones size={24} />{" "}
+					<Link href={"/"} className="w-max text-sky-500 flex items-center">
+						{" "}
+						<BsPuzzleFill size={24} />
 						<span>
-							<span className="font-bold">Teman</span>
-							Dengar
+							Konseling
+							<span className="font-bold">Hub</span>
 						</span>
 					</Link>
 					{children ? <div>{children}</div> : null}
@@ -63,7 +64,7 @@ const TopAppBar = ({
 						<FaCircleUser className="fill-slate-400" size={40} />
 						<div>
 							<span>Darrell Steward</span>
-							<div className="bg-sky-600 text-white w-max px-[8px] rounded-[4px]">
+							<div className="bg-sky-500 text-white w-max px-[8px] rounded-[4px]">
 								Konseli
 							</div>
 						</div>
