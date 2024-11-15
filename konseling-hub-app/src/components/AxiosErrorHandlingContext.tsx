@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { AxiosError } from "axios"
+import { AxiosError } from "axios";
 import {
 	Dispatch,
 	ReactNode,
@@ -8,50 +8,51 @@ import {
 	createContext,
 	useCallback,
 	useContext,
-} from "react"
+} from "react";
 
-import { usePopupContext } from "./PopupContext"
+import { usePopupContext } from "./PopupContext";
 
 type AxiosErrorHandling = (
 	error: AxiosError,
-	setStateAction?: Dispatch<SetStateAction<any>>
-) => void
+	setStateAction?: Dispatch<SetStateAction<object>>
+) => void;
 
 type AxiosErrorHandlingContext = {
-	axiosErrorHandling: AxiosErrorHandling
-}
+	axiosErrorHandling: AxiosErrorHandling;
+};
 
 const axiosErrorHandlingContext =
-	createContext<null | AxiosErrorHandlingContext>(null)
+	createContext<null | AxiosErrorHandlingContext>(null);
 
 const AxiosErrorHandlingProvider = ({ children }: { children: ReactNode }) => {
-	const { errorAlertPopup } = usePopupContext()
+	const { errorAlertPopup } = usePopupContext();
 
 	const axiosErrorHandling: AxiosErrorHandling = useCallback(
-		(error: AxiosError, setStateAction?: Dispatch<SetStateAction<any>>) => {
-			if (!error.response) return errorAlertPopup(error.message)
+		(error: AxiosError, setStateAction?: Dispatch<SetStateAction<object>>) => {
+			if (!error.response) return errorAlertPopup(error.message);
 
 			if (typeof error.response.data === "string")
-				return errorAlertPopup(error.response.data)
+				return errorAlertPopup(error.response.data);
 
-			type Data = { message: string | object }
-			const data = error.response.data as Data
-			if (typeof data.message === "string") return errorAlertPopup(data.message)
+			type Data = { message: string | object };
+			const data = error.response.data as Data;
+			if (typeof data.message === "string")
+				return errorAlertPopup(data.message);
 
-			if (setStateAction) setStateAction(data.message)
+			if (setStateAction) setStateAction(data.message);
 		},
 		[errorAlertPopup]
-	)
+	);
 
 	return (
 		<axiosErrorHandlingContext.Provider value={{ axiosErrorHandling }}>
 			{children}
 		</axiosErrorHandlingContext.Provider>
-	)
-}
+	);
+};
 
-export default AxiosErrorHandlingProvider
+export default AxiosErrorHandlingProvider;
 
 export const useAxiosErrorHandlingContext = () => {
-	return useContext(axiosErrorHandlingContext) as AxiosErrorHandlingContext
-}
+	return useContext(axiosErrorHandlingContext) as AxiosErrorHandlingContext;
+};

@@ -81,7 +81,7 @@ const Page = () => {
 	const deleteErrorInput = (
 		name: "email" | "fullname" | "password" | "confirmPassword"
 	) => {
-		let data = { ...errorInput };
+		const data = { ...errorInput };
 		delete data[name];
 		setErrorInput(data);
 	};
