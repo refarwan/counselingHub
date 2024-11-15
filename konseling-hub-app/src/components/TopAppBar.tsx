@@ -10,6 +10,7 @@ import {
 	FaUserGear,
 	FaKey,
 	FaRightFromBracket,
+	FaCircleUser,
 } from "react-icons/fa6";
 
 const TopAppBar = ({
@@ -47,7 +48,7 @@ const TopAppBar = ({
 						setSHowMenu((prev) => !prev);
 					}}
 				>
-					<div className="bg-red-700 h-[30px] w-[30px] rounded-full"></div>
+					<FaCircleUser className="fill-slate-400" size={30} />
 				</button>
 				<div
 					className={
@@ -59,7 +60,7 @@ const TopAppBar = ({
 						href={"/"}
 						className="flex px-[12px] py-[8px] gap-[12px] border-b border-slate-200 base-link"
 					>
-						<div className="bg-red-700 h-[40px] w-[40px] rounded-full"></div>
+						<FaCircleUser className="fill-slate-400" size={40} />
 						<div>
 							<span>Darrell Steward</span>
 							<div className="bg-sky-600 text-white w-max px-[8px] rounded-[4px]">
