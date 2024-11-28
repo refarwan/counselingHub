@@ -5,9 +5,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=database
-      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=KonselingHub2024
+      - POSTGRES_DB=konseling-hub
+      - POSTGRES_USER=konseling-hub-user
 
   konseling-hub-redis:
     container_name: konseling-hub-redis
@@ -22,25 +22,32 @@ services:
     build:
       context: ./konseling-hub-api
       dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://konseling-hub-user:KonselingHub2024@konseling-hub-postgres:5432/konseling-hub?schema=public
+      - ALLOWED_ORIGIN=["http://localhost:3000"]
+      - REDIS_HOST=konseling-hub-redis
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=konseling-hub-user
+      - REDIS_PASSWORD=KonselingHub2024
+
     depends_on:
       - konseling-hub-postgres
       - konseling-hub-redis
-    image: konseling-hub-api:1.0.0
+    image: konseling-hub-api:1.0.0-beta
     container_name: konseling-hub-api
-    environment:
-      - APP_PORT=9000
     ports:
       - 9000:9000
+    command: sh -c "npx prisma migrate deploy; npm start"
 
   konseling-hub-app:
     build:
       context: ./konseling-hub-app
       dockerfile: Dockerfile
       args:
-        - API_HOST=https://www.api-url.com
+        - API_ORIGIN=http://konseling-hub-api:9000
     depends_on:
       - konseling-hub-api
-    image: konseling-hub-app:1.0.0
+    image: konseling-hub-app:1.0.0-beta
     container_name: konseling-hub-app
     ports:
       - 3000:3000

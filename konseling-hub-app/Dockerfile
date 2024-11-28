@@ -1,10 +1,11 @@
-FROM node:18-alpine
+FROM node:20.18-alpine
 
-ARG API_HOST
+ARG API_ORIGIN
 
 WORKDIR /app
 
 COPY . .
+
 RUN npm install
 RUN npm run build
 
