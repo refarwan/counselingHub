@@ -37,7 +37,7 @@ services:
     container_name: konseling-hub-api
     ports:
       - 9000:9000
-    command: sh -c "npx prisma migrate deploy; npm start"
+    command: sh -c "npx prisma migrate deploy; npx prisma db seed; npm start"
 
   konseling-hub-app:
     build:
