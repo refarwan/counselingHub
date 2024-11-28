@@ -8,6 +8,7 @@ import {
 	InternalServerErrorException,
 } from "@nestjs/common";
 import { hashSync } from "bcrypt";
+import { randomBytes } from "crypto";
 
 @Injectable()
 export class AccountService {
@@ -42,6 +43,7 @@ export class AccountService {
 
 		const account = await this.prismaService.account.create({
 			data: {
+				username: randomBytes(16).toString("hex"),
 				email: data.email,
 				fullname: data.fullname,
 				password: hashSync(data.password, 10),
