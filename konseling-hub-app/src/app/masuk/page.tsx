@@ -2,15 +2,90 @@
 
 import TextField from "@/components/Textfiled";
 
+import { FormEvent, useCallback, useState } from "react";
+
 import Link from "next/link";
 
 import { BsPuzzleFill } from "react-icons/bs";
+import { useLoadingBarContext } from "@/components/LoadingBarContext";
+import { useRouter } from "next/navigation";
+import { useAxiosErrorHandlingContext } from "@/components/AxiosErrorHandlingContext";
+import { axiosInstance } from "@/utils/axios-intance";
+import { setAccessToken } from "@/utils/server-auth";
+import { AxiosError } from "axios";
 
 const Page = () => {
+	const [username, setUsername] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+
+	type errorInputType = {
+		username?: string[];
+		password?: string[];
+	};
+
+	const [errorInputState, setErrorInputState] = useState<errorInputType>({});
+
+	const deleteErrorInput = (name: "password" | "username") => {
+		const data = { ...errorInputState };
+		delete data[name];
+		setErrorInputState(data);
+	};
+
+	const { loadingBarStart, loadingBarStop } = useLoadingBarContext();
+	const [isProcessing, setIsProcessing] = useState<boolean>(false);
+	const router = useRouter();
+	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
+
+	const handleSubmit = useCallback(
+		async (event: FormEvent) => {
+			event.preventDefault();
+
+			const inputErrors: errorInputType = { ...errorInputState };
+
+			if (!username) inputErrors.username = ["Username tidak boleh kosong"];
+			if (!password) inputErrors.password = ["Password tidak boleh kosong"];
+
+			console.log(inputErrors);
+
+			if (Object.keys(inputErrors).length)
+				return setErrorInputState(inputErrors);
+
+			loadingBarStart();
+			setIsProcessing(true);
+			await axiosInstance
+				.post("auth/login", {
+					username,
+					password,
+				})
+				.then(async (response) => {
+					await setAccessToken(response.data.accessToken);
+					router.push("/anggota/dashboard");
+				})
+				.catch((error: AxiosError) => {
+					axiosErrorHandling(error, setErrorInputState);
+				});
+			setIsProcessing(false);
+			loadingBarStop();
+		},
+		[
+			axiosErrorHandling,
+			loadingBarStart,
+			loadingBarStop,
+			errorInputState,
+			router,
+			username,
+			password,
+		]
+	);
+
 	return (
 		<>
 			<main className="px-[16px] pt-[56px]">
-				<div className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto">
+				<form
+					className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto"
+					onSubmit={handleSubmit}
+					method="post"
+				>
 					<div className="text-sky-500 flex flex-col items-center">
 						<BsPuzzleFill size={48} />
 						<span className="text-[30px]">
@@ -23,10 +98,26 @@ const Page = () => {
 					</div>
 					<TextField
 						type="text"
-						name="email"
-						label="Email atau nomor telepon"
+						name="username"
+						label="Username / email / nomor telepon"
+						setStateAction={setUsername}
+						onChange={() => {
+							deleteErrorInput("username");
+						}}
+						isError={errorInputState.username ? true : false}
+						supporting={errorInputState.username}
 					/>
-					<TextField type="password" name="password" label="Kata sandi" />
+					<TextField
+						type="password"
+						name="password"
+						label="Kata sandi"
+						setStateAction={setPassword}
+						onChange={() => {
+							deleteErrorInput("password");
+						}}
+						isError={errorInputState.password ? true : false}
+						supporting={errorInputState.password}
+					/>
 					<Link href={"/lupa-sandi"} className="w-max text-sky-500">
 						Lupa Sandi?
 					</Link>
@@ -34,9 +125,15 @@ const Page = () => {
 						<Link href={"/daftar"} className="text-button">
 							Daftar
 						</Link>
-						<button className="filled-button">Masuk</button>
+						<button
+							type="submit"
+							className="filled-button"
+							disabled={isProcessing}
+						>
+							Masuk
+						</button>
 					</div>
-				</div>
+				</form>
 			</main>
 			<footer className="text-[12px] text-center mt-[56px] mb-[5px]">
 				Copyright &copy; Teman Dengar 2024
