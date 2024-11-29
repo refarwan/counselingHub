@@ -65,6 +65,8 @@ export class AccountService {
 
 		const accountData: CacheAccountDataType = {
 			id: account.id,
+			fullname: data.fullname,
+			profilePicture: null,
 			role: account.role,
 		};
 

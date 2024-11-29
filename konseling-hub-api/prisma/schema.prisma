@@ -28,6 +28,7 @@ model Account {
   id             Int       @id @default(autoincrement())
   username       String    @unique
   email          String    @unique
+  phoneNumber    String?   @unique
   password       String
   role           Role      @default(konseli)
   fullname       String

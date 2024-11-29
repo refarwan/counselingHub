@@ -1,7 +1,28 @@
-import { Controller } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Response } from "express";
+import { AuthService } from "./auth.service";
+import { LoginDto } from "./dto/login.dto";
 
-@Controller('auth')
+import { Body, Controller, Post, Res } from "@nestjs/common";
+
+@Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+	constructor(private readonly authService: AuthService) {}
+
+	@Post("login")
+	async register(
+		@Body() data: LoginDto,
+		@Res({ passthrough: true }) response: Response,
+	): Promise<{ accessToken: string }> {
+		const { accessToken, refreshToken, expires } =
+			await this.authService.login(data);
+
+		const secure: boolean = JSON.parse(process.env.IS_HTTPS);
+
+		response.cookie("refreshToken", refreshToken, {
+			expires,
+			secure,
+			httpOnly: true,
+		});
+		return { accessToken };
+	}
 }
