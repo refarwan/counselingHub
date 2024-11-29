@@ -6,6 +6,7 @@ import { CacheAccountDataType } from "../types/cache-account-data";
 
 import {
 	BadRequestException,
+	ForbiddenException,
 	Inject,
 	Injectable,
 	NotFoundException,
@@ -124,5 +125,43 @@ export class AuthService {
 		const expires = DateTime.fromSeconds(exp).toJSDate();
 
 		return { accessToken, refreshToken, expires };
+	}
+
+	async getNewAccessToken(
+		refreshToken: undefined | string,
+	): Promise<{ accessToken: string }> {
+		if (!refreshToken)
+			throw new UnauthorizedException({
+				message: "Refresh token tidak ditemukan",
+			});
+
+		const blacklistedRefreshToken = await this.cacheManager.get(
+			`blacklistedRefreshToken:${refreshToken}`,
+		);
+		if (blacklistedRefreshToken)
+			throw new ForbiddenException({
+				message: "Refresh token tidak berlaku lagi",
+			});
+
+		let username: null | string = null;
+		try {
+			const payload: { username: string; iat: number; exp: number } =
+				this.jwtService.verify(refreshToken, {
+					secret: process.env.REFRESH_TOKEN_SECRET,
+				});
+			username = payload.username;
+		} catch {
+			throw new UnauthorizedException({
+				message: "Refresh token tidak dapat diverifikasi",
+			});
+		}
+
+		const accessToken = await this.createAccessToken(username);
+		if (!accessToken)
+			throw new ForbiddenException({
+				message: "Refresh token tidak berlaku lagi",
+			});
+
+		return { accessToken };
 	}
 }
