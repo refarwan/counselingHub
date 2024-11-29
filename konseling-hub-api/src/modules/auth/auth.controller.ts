@@ -5,6 +5,7 @@ import { LoginDto } from "./dto/login.dto";
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpCode,
 	Post,
@@ -41,5 +42,16 @@ export class AuthController {
 	): Promise<{ accessToken: string }> {
 		const refreshToken = request.cookies["refreshToken"] as undefined | string;
 		return await this.authService.getNewAccessToken(refreshToken);
+	}
+
+	@Delete("logout")
+	async logout(
+		@Req() request: Request,
+		@Res({ passthrough: true }) response: Response,
+	) {
+		const refreshToken = request.cookies["refreshToken"] as undefined | string;
+		await this.authService.logout(refreshToken);
+		response.clearCookie("refreshToken");
+		return { message: "Berhasil mengeluarkan akun" };
 	}
 }

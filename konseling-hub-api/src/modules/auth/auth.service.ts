@@ -164,4 +164,26 @@ export class AuthService {
 
 		return { accessToken };
 	}
+
+	async logout(refreshToken: undefined | string): Promise<void> {
+		if (!refreshToken)
+			throw new UnauthorizedException({
+				message: "Refresh token tidak ditemukan",
+			});
+
+		try {
+			type DecodedType = { username: string; iat: number; exp: number };
+			const data: DecodedType = this.jwtService.decode(refreshToken);
+
+			const ttl = DateTime.fromSeconds(data.exp).diff(
+				DateTime.now(),
+			).milliseconds;
+
+			await this.cacheManager.set(
+				`blacklistedRefreshToken:${refreshToken}`,
+				true,
+				ttl,
+			);
+		} catch {}
+	}
 }
