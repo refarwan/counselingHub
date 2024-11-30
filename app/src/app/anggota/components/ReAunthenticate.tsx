@@ -38,7 +38,7 @@ const ReAuthenticate = () => {
 						return axiosErrorHandling({ error });
 					});
 		}
-	}, [axiosErrorHandling]);
+	}, [axiosErrorHandling, router]);
 
 	useEffect(() => {
 		reAuthenticate();
