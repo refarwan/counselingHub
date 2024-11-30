@@ -12,10 +12,15 @@ import {
 
 import { usePopupContext } from "./PopupContext";
 
-type AxiosErrorHandling = (
-	error: AxiosError,
-	setStateAction?: Dispatch<SetStateAction<object>>
-) => void;
+type AxiosErrorHandling = ({
+	error,
+	setStateAction,
+	alertConfirmAction,
+}: {
+	error: AxiosError;
+	setStateAction?: Dispatch<SetStateAction<object>>;
+	alertConfirmAction?: () => void;
+}) => void;
 
 type AxiosErrorHandlingContext = {
 	axiosErrorHandling: AxiosErrorHandling;
@@ -28,7 +33,7 @@ const AxiosErrorHandlingProvider = ({ children }: { children: ReactNode }) => {
 	const { errorAlertPopup } = usePopupContext();
 
 	const axiosErrorHandling: AxiosErrorHandling = useCallback(
-		(error: AxiosError, setStateAction?: Dispatch<SetStateAction<object>>) => {
+		({ error, setStateAction, alertConfirmAction }) => {
 			if (!error.response) return errorAlertPopup(error.message);
 
 			if (typeof error.response.data === "string")
@@ -37,7 +42,9 @@ const AxiosErrorHandlingProvider = ({ children }: { children: ReactNode }) => {
 			type Data = { message: string | object };
 			const data = error.response.data as Data;
 			if (typeof data.message === "string")
-				return errorAlertPopup(data.message);
+				return errorAlertPopup(data.message, () => {
+					if (alertConfirmAction) alertConfirmAction();
+				});
 
 			if (setStateAction) setStateAction(data.message);
 		},

@@ -72,7 +72,7 @@ const Page = () => {
 				setconfirmPassword("");
 			})
 			.catch((error: AxiosError) => {
-				axiosErrorHandling(error, setErrorInput);
+				axiosErrorHandling({ error, setStateAction: setErrorInput });
 			});
 
 		loadingBarStop();

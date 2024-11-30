@@ -127,21 +127,18 @@ export class AuthService {
 		return { accessToken, refreshToken, expires };
 	}
 
-	async getNewAccessToken(
-		refreshToken: undefined | string,
-	): Promise<{ accessToken: string }> {
-		if (!refreshToken)
-			throw new UnauthorizedException({
-				message: "Refresh token tidak ditemukan",
-			});
-
+	async getNewAccessToken(refreshToken: string): Promise<{
+		status: "success" | "forbidden" | "serverError";
+		message: string;
+	}> {
 		const blacklistedRefreshToken = await this.cacheManager.get(
 			`blacklistedRefreshToken:${refreshToken}`,
 		);
 		if (blacklistedRefreshToken)
-			throw new ForbiddenException({
+			return {
+				status: "forbidden",
 				message: "Refresh token tidak berlaku lagi",
-			});
+			};
 
 		let username: null | string = null;
 		try {
@@ -151,18 +148,20 @@ export class AuthService {
 				});
 			username = payload.username;
 		} catch {
-			throw new UnauthorizedException({
+			return {
+				status: "forbidden",
 				message: "Refresh token tidak dapat diverifikasi",
-			});
+			};
 		}
 
 		const accessToken = await this.createAccessToken(username);
 		if (!accessToken)
-			throw new ForbiddenException({
-				message: "Refresh token tidak berlaku lagi",
-			});
+			return {
+				status: "serverError",
+				message: "Server gagal memperbarui token",
+			};
 
-		return { accessToken };
+		return { status: "success", message: accessToken };
 	}
 
 	async logout(refreshToken: undefined | string): Promise<void> {

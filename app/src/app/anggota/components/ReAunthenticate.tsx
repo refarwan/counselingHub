@@ -1,7 +1,5 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
-
 import { axiosInstance } from "@/utils/axios-intance";
 import {
 	checkIsLogin,
@@ -10,11 +8,16 @@ import {
 } from "@/utils/server-auth";
 import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
 
+import { useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import { AxiosError } from "axios";
 import { FaSpinner } from "react-icons/fa6";
 import { BsPuzzleFill } from "react-icons/bs";
 
 const ReAuthenticate = () => {
+	const router = useRouter();
+
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
 	const reAuthenticate = useCallback(async () => {
 		const isLogin = await checkIsLogin();
@@ -27,7 +30,12 @@ const ReAuthenticate = () => {
 						await setAccessToken(response.data.accessToken);
 					})
 					.catch(async (error: AxiosError) => {
-						axiosErrorHandling(error);
+						if (error.status === 403)
+							return axiosErrorHandling({
+								error,
+								alertConfirmAction: () => router.push("/masuk"),
+							});
+						return axiosErrorHandling({ error });
 					});
 		}
 	}, [axiosErrorHandling]);

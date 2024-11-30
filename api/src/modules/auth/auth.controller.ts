@@ -6,11 +6,14 @@ import {
 	Body,
 	Controller,
 	Delete,
+	ForbiddenException,
 	Get,
 	HttpCode,
+	InternalServerErrorException,
 	Post,
 	Req,
 	Res,
+	UnauthorizedException,
 } from "@nestjs/common";
 
 @Controller("auth")
@@ -39,9 +42,24 @@ export class AuthController {
 	@Get("access-token")
 	async getNewAccessToken(
 		@Req() request: Request,
+		@Res({ passthrough: true }) response: Response,
 	): Promise<{ accessToken: string }> {
 		const refreshToken = request.cookies["refreshToken"] as undefined | string;
-		return await this.authService.getNewAccessToken(refreshToken);
+		if (!refreshToken)
+			throw new UnauthorizedException({
+				message: "Refresh token tidak ditemukan",
+			});
+		const result = await this.authService.getNewAccessToken(refreshToken);
+
+		if (result.status === "serverError")
+			throw new InternalServerErrorException({ message: result.message });
+
+		if (result.status === "forbidden") {
+			response.clearCookie("refreshToken");
+			throw new ForbiddenException({ message: result.message });
+		}
+
+		return { accessToken: result.message };
 	}
 
 	@Delete("logout")

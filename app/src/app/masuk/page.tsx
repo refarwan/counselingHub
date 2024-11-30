@@ -60,7 +60,7 @@ const Page = () => {
 				router.push("/anggota/dashboard");
 			})
 			.catch((error: AxiosError) => {
-				axiosErrorHandling(error, setErrorInputState);
+				axiosErrorHandling({ error, setStateAction: setErrorInputState });
 			});
 		setIsProcessing(false);
 		loadingBarStop();
