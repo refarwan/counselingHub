@@ -1,10 +1,10 @@
 "use client";
 
-import TextField from "@/components/Textfiled";
+import TextField from "@/app/components/Textfiled";
 import { axiosInstance } from "@/utils/axios-intance";
-import { useLoadingBarContext } from "@/components/LoadingBarContext";
-import { useAxiosErrorHandlingContext } from "@/components/AxiosErrorHandlingContext";
-import { usePopupContext } from "@/components/PopupContext";
+import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
+import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
+import { usePopupContext } from "@/app/components/PopupContext";
 
 import { useState } from "react";
 

@@ -8,7 +8,7 @@ import {
 	getAccessToken,
 	setAccessToken,
 } from "@/utils/server-auth";
-import { useAxiosErrorHandlingContext } from "./AxiosErrorHandlingContext";
+import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
 
 import { AxiosError } from "axios";
 import { FaSpinner } from "react-icons/fa6";

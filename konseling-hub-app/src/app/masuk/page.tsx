@@ -1,15 +1,15 @@
 "use client";
 
-import TextField from "@/components/Textfiled";
+import TextField from "@/app/components/Textfiled";
 
 import { FormEvent, useCallback, useState } from "react";
 
 import Link from "next/link";
 
 import { BsPuzzleFill } from "react-icons/bs";
-import { useLoadingBarContext } from "@/components/LoadingBarContext";
+import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
 import { useRouter } from "next/navigation";
-import { useAxiosErrorHandlingContext } from "@/components/AxiosErrorHandlingContext";
+import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
 import { axiosInstance } from "@/utils/axios-intance";
 import { setAccessToken } from "@/utils/server-auth";
 import { AxiosError } from "axios";

@@ -1,5 +1,7 @@
 "use client";
 
+import AccountRole from "@/utils/types/account-role";
+
 import Link from "next/link";
 import { ReactNode, useState } from "react";
 
@@ -16,9 +18,15 @@ import { BsPuzzleFill } from "react-icons/bs";
 const TopAppBar = ({
 	togleMenu,
 	children,
+	accountData,
 }: {
 	togleMenu?: () => void;
 	children?: ReactNode;
+	accountData: {
+		profilePicture: null | string;
+		fullname: string;
+		role: AccountRole;
+	};
 }) => {
 	const [showMenu, setSHowMenu] = useState<boolean>(false);
 	return (
@@ -63,9 +71,10 @@ const TopAppBar = ({
 					>
 						<FaCircleUser className="fill-slate-400" size={40} />
 						<div>
-							<span>Darrell Steward</span>
+							<span>{accountData.fullname}</span>
 							<div className="bg-sky-500 text-white w-max px-[8px] rounded-[4px]">
-								Konseli
+								{accountData.role.charAt(0).toUpperCase() +
+									accountData.role.slice(1)}
 							</div>
 						</div>
 					</Link>

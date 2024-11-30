@@ -1,18 +1,23 @@
 "use server";
 
+import AccountRole from "./types/account-role";
+
 import { cookies } from "next/headers";
 
 import { jwtDecode } from "jwt-decode";
 
-export type AccountStatus = "uncompleted" | "non active" | "active";
-
 export interface AuthData {
-	role: "member" | "admin" | "master";
-	status: AccountStatus;
+	username: string;
+	profilePicture: null | string;
+	fullname: string;
+	role: AccountRole;
 }
 
 export interface DecodedAccessTokenPayload extends AuthData {
-	username: string;
+	username: "346c0860b82209a9a728e62ca45ad52a";
+	profilePicture: null;
+	fullname: "Refarwan";
+	role: "konseli";
 	iat: number;
 	exp: number;
 }
@@ -22,8 +27,10 @@ export const getAuthData = async (): Promise<null | AuthData> => {
 	if (!accessToken) return null;
 	const authData: DecodedAccessTokenPayload = jwtDecode(accessToken.value);
 	return {
+		username: authData.username,
+		profilePicture: authData.profilePicture,
+		fullname: authData.fullname,
 		role: authData.role,
-		status: authData.status,
 	};
 };
 
