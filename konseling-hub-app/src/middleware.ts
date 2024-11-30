@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAuthData, checkIsLogin } from "./utils/server-auth";
+import { checkIsLogin } from "./utils/server-auth";
 
 export async function middleware(request: NextRequest) {
 	const isLogin = await checkIsLogin();
-	const authData = await getAuthData();
 
 	const { pathname } = request.nextUrl;
 

@@ -6,7 +6,7 @@ import { deleteAccessToken } from "@/utils/server-auth";
 import { axiosInstance } from "@/utils/axios-intance";
 import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
 
-import { MouseEvent, ReactNode, useCallback, useState } from "react";
+import { MouseEvent, ReactNode, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";

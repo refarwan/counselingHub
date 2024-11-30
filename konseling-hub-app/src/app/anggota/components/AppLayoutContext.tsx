@@ -2,11 +2,14 @@
 
 import AccountRole from "@/utils/types/account-role";
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+	ComponentType,
+	createContext,
+	ReactNode,
+	useContext,
+	useState,
+} from "react";
 
-import Link from "next/link";
-
-import { FaGears } from "react-icons/fa6";
 import TopAppBar from "./TopAppBar";
 
 export type NavigationBarContext = {
@@ -20,6 +23,7 @@ const navigationBarContext = createContext<null | NavigationBarContext>(null);
 const AppLayoutProvider = ({
 	children,
 	accountData,
+	Menu,
 }: {
 	children: ReactNode;
 	accountData: {
@@ -27,6 +31,7 @@ const AppLayoutProvider = ({
 		fullname: string;
 		role: AccountRole;
 	};
+	Menu: ComponentType<{ minimize: boolean }>;
 }) => {
 	const [minimize, setMinimize] = useState<boolean>(false);
 	const [show, setShow] = useState<boolean>(false);
@@ -49,111 +54,13 @@ const AppLayoutProvider = ({
 			>
 				<div
 					className={
-						"bg-white border-r border-r-slate-200 w-[250px] h-screen px-[8px] xl:w-full duration-75 fixed xl:relative" +
+						"bg-white border-r border-r-slate-200 w-[250px] h-screen px-[8px] xl:w-full duration-75 fixed overflow-hidden xl:relative xl:overflow-y-scroll" +
 						(minimize ? " xl:px-[10px]" : "") +
 						(show ? " left-0" : " left-[-250px] xl:left-0")
 					}
 					onClick={(event) => event.stopPropagation()}
 				>
-					<div
-						className={
-							"border-b border-b-slate-200 flex flex-col pb-[8px]" +
-							(minimize ? " xl:pt-[8px]" : "")
-						}
-					>
-						<div
-							className={
-								"w-full h-[48px] px-[16px] leading-[48px]" +
-								(minimize ? " xl:hidden" : "")
-							}
-						>
-							Label 1
-						</div>
-						<Link
-							href={"/"}
-							className={
-								"w-full h-[48px] px-[16px] rounded-[8px] flex items-center gap-[12px] base-link bg-sky-100" +
-								(minimize ? " xl:gap-0 p-0 xl:w-max" : "")
-							}
-						>
-							<FaGears size={24} />{" "}
-							<span className={minimize ? "xl:hidden" : ""}>Menu 1</span>
-						</Link>
-						<Link
-							href={"/"}
-							className={
-								"w-full h-[48px] px-[16px] rounded-[8px] flex items-center gap-[12px] base-link" +
-								(minimize ? " xl:gap-0 p-0 xl:w-max" : "")
-							}
-						>
-							<FaGears size={24} />{" "}
-							<span className={minimize ? "xl:hidden" : ""}>Menu 2</span>
-						</Link>
-						<Link
-							href={"/"}
-							className={
-								"w-full h-[48px] px-[16px] rounded-[8px] flex items-center gap-[12px] base-link" +
-								(minimize ? " xl:gap-0 p-0 xl:w-max" : "")
-							}
-						>
-							<FaGears size={24} />{" "}
-							<span className={minimize ? "xl:hidden" : ""}>Menu 3</span>
-						</Link>
-						<Link
-							href={"/"}
-							className={
-								"w-full h-[48px] px-[16px] rounded-[8px] flex items-center gap-[12px] base-link" +
-								(minimize ? " xl:gap-0 p-0 xl:w-max" : "")
-							}
-						>
-							<FaGears size={24} />{" "}
-							<span className={minimize ? "xl:hidden" : ""}>Menu 4</span>
-						</Link>
-					</div>
-					<div
-						className={
-							"flex flex-col pb-[8px]" + (minimize ? " xl:pt-[8px]" : "")
-						}
-					>
-						<div
-							className={
-								"w-full h-[48px] px-[16px] leading-[48px]" +
-								(minimize ? " xl:hidden" : "")
-							}
-						>
-							Label 2
-						</div>
-						<Link
-							href={"/"}
-							className={
-								"w-full h-[48px] px-[16px] rounded-[8px] flex items-center gap-[12px] base-link" +
-								(minimize ? " xl:gap-0 p-0 xl:w-max" : "")
-							}
-						>
-							<FaGears size={24} />{" "}
-							<span className={minimize ? "xl:hidden" : ""}>Menu 5</span>
-						</Link>
-						<Link
-							href={"/"}
-							className={
-								"w-full h-[48px] px-[16px] rounded-[8px] flex items-center gap-[12px] base-link" +
-								(minimize ? " xl:gap-0 p-0 xl:w-max" : "")
-							}
-						>
-							<FaGears size={24} />{" "}
-							<span className={minimize ? "xl:hidden" : ""}>Menu 6</span>
-						</Link>
-						<Link
-							href={"/"}
-							className={
-								"w-full h-[48px] px-[16px] rounded-[8px] flex items-center gap-[12px] base-link" +
-								(minimize ? " xl:gap-0 p-0 xl:w-max" : "")
-							}
-						>
-							<FaGears size={24} />{" "}
-							<span className={minimize ? "xl:hidden" : ""}>Menu 7</span>
-						</Link>
-					</div>
+					<Menu minimize={minimize} />
 				</div>
 			</nav>
 			<main
