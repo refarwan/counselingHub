@@ -24,7 +24,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgresql://konseling-hub-user:KonselingHub2024@konseling-hub-postgres:5432/konseling-hub?schema=public
-      - ALLOWED_ORIGIN=["http://localhost:3000"]
+      - ALLOWED_ORIGIN=["https://www.konseling-hub.com","https://konseling-hub.com"]
       - REDIS_HOST=konseling-hub-redis
       - REDIS_PORT=6379
       - REDIS_USERNAME=konseling-hub-user
@@ -47,7 +47,8 @@ services:
       context: ./konseling-hub-app
       dockerfile: Dockerfile
       args:
-        - API_ORIGIN=http://konseling-hub-api:9000
+        - API_ORIGIN=https://www.api-konseling-hub.com
+        - IS_HTTPS=true
     depends_on:
       - konseling-hub-api
     image: konseling-hub-app:1.0.0-beta

@@ -1,6 +1,7 @@
 FROM node:20.18-alpine
 
 ARG API_ORIGIN
+ARG IS_HTTPS
 
 WORKDIR /app
 
