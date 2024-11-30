@@ -1,16 +1,16 @@
 services:
-  konseling-hub-postgres:
-    container_name: konseling-hub-postgres
+  counselinghub-postgres:
+    container_name: counselinghub-postgres
     image: postgres:16.2
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=KonselingHub2024
-      - POSTGRES_DB=konseling-hub
-      - POSTGRES_USER=konseling-hub-user
+      - POSTGRES_PASSWORD=counselinghub2024
+      - POSTGRES_DB=counselinghub
+      - POSTGRES_USER=counselinghub-user
 
-  konseling-hub-redis:
-    container_name: konseling-hub-redis
+  counselinghub-redis:
+    container_name: counselinghub-redis
     image: redis:6
     command: redis-server /usr/local/etc/redis/redis.conf
     ports:
@@ -18,42 +18,42 @@ services:
     volumes:
       - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
 
-  konseling-hub-api:
+  counselinghub-api:
     build:
-      context: ./konseling-hub-api
+      context: ./api
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgresql://konseling-hub-user:KonselingHub2024@konseling-hub-postgres:5432/konseling-hub?schema=public
-      - ALLOWED_ORIGIN=["https://www.konseling-hub.com","https://konseling-hub.com"]
-      - REDIS_HOST=konseling-hub-redis
+      - DATABASE_URL=postgresql://counselinghub-user:counselinghub2024@counselinghub-postgres:5432/counselinghub?schema=public
+      - ALLOWED_ORIGIN=["https://www.counselinghub.com","https://counselinghub.com"]
+      - REDIS_HOST=counselinghub-redis
       - REDIS_PORT=6379
-      - REDIS_USERNAME=konseling-hub-user
-      - REDIS_PASSWORD=KonselingHub2024
+      - REDIS_USERNAME=counselinghub-user
+      - REDIS_PASSWORD=counselinghub2024
       - ACCESS_TOKEN_SECRET="jwt-access-token-key"
       - REFRESH_TOKEN_SECRET="jwt-refresh-token-key"
       - IS_HTTPS=true
 
     depends_on:
-      - konseling-hub-postgres
-      - konseling-hub-redis
-    image: konseling-hub-api:1.0.0-beta
-    container_name: konseling-hub-api
+      - counselinghub-postgres
+      - counselinghub-redis
+    image: counselinghub-api:1.0.0-beta
+    container_name: counselinghub-api
     ports:
       - 9000:9000
     command: sh -c "npx prisma migrate deploy; npx prisma db seed; npm start"
 
-  konseling-hub-app:
+  counselinghub-app:
     build:
-      context: ./konseling-hub-app
+      context: ./app
       dockerfile: Dockerfile
       args:
-        - API_ORIGIN=https://www.api-konseling-hub.com
+        - API_ORIGIN=https://www.counselinghub-api.com
         - IS_HTTPS=true
     environment:
-      - ALLOWED_ORIGINS=["*.konseling-hub.com"]
+      - ALLOWED_ORIGINS=["*counselinghub-app.com"]
     depends_on:
-      - konseling-hub-api
-    image: konseling-hub-app:1.0.0-beta
-    container_name: konseling-hub-app
+      - counselinghub-api
+    image: counselinghub-app:1.0.0-beta
+    container_name: counselinghub-app
     ports:
       - 3000:3000
