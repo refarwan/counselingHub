@@ -46,7 +46,7 @@ const TopAppBar = ({
 		loadingBarStart();
 		await axiosInstance
 			.delete("auth/logout")
-			.catch((error: AxiosError) => axiosErrorHandling(error));
+			.catch((error: AxiosError) => axiosErrorHandling({ error }));
 		deleteAccessToken();
 		loadingBarStop();
 		router.push("/masuk");
