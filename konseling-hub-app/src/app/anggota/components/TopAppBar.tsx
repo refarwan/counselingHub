@@ -1,9 +1,15 @@
 "use client";
 
 import AccountRole from "@/utils/types/account-role";
+import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
+import { deleteAccessToken } from "@/utils/server-auth";
+import { axiosInstance } from "@/utils/axios-intance";
+import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
+
+import { MouseEvent, ReactNode, useCallback, useState } from "react";
 
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
 	FaBars,
@@ -14,6 +20,7 @@ import {
 	FaCircleUser,
 } from "react-icons/fa6";
 import { BsPuzzleFill } from "react-icons/bs";
+import { AxiosError } from "axios";
 
 const TopAppBar = ({
 	togleMenu,
@@ -29,6 +36,22 @@ const TopAppBar = ({
 	};
 }) => {
 	const [showMenu, setSHowMenu] = useState<boolean>(false);
+
+	const { loadingBarStart, loadingBarStop } = useLoadingBarContext();
+	const router = useRouter();
+	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
+
+	const logout = async (event: MouseEvent) => {
+		event.preventDefault();
+		loadingBarStart();
+		await axiosInstance
+			.delete("auth/logout")
+			.catch((error: AxiosError) => axiosErrorHandling(error));
+		deleteAccessToken();
+		loadingBarStop();
+		router.push("/masuk");
+	};
+
 	return (
 		<>
 			<header className="bg-white border-b border-b-slate-200 w-full h-[64px] flex justify-between items-center gap-[16px] px-[8px] sm:px-[16px] fixed top-0 left-0">
@@ -97,12 +120,13 @@ const TopAppBar = ({
 						>
 							<FaKey size={24} /> <span>Ubah Password</span>
 						</Link>
-						<Link
-							href={"/"}
+						<a
+							href="/logout"
 							className="flex px-[12px] gap-[12px] h-[48px] base-link items-center"
+							onClick={logout}
 						>
 							<FaRightFromBracket size={24} /> <span>Keluar</span>
-						</Link>
+						</a>
 					</div>
 				</div>
 			</header>
