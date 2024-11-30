@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
+let allowedOrigins: string[] = [];
+if (process.env.ALLOWED_ORIGINS)
+	allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS);
+
 const nextConfig: NextConfig = {
 	/* config options here */
 	experimental: {
 		serverActions: {
-			allowedOrigins: [process.env.APP_ORIGIN as string],
+			allowedOrigins,
 		},
 	},
 	async rewrites() {

@@ -49,7 +49,7 @@ services:
       args:
         - API_ORIGIN=https://www.api-konseling-hub.com
         - IS_HTTPS=true
-        - APP_ORIGIN=https://www.konseling-hub.com
+        - ALLOWED_ORIGINS=["*.konseling-hub.com"]
     depends_on:
       - konseling-hub-api
     image: konseling-hub-app:1.0.0-beta
