@@ -6,7 +6,7 @@ import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
 import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
 import { usePopupContext } from "@/app/components/PopupContext";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,7 +35,8 @@ const Page = () => {
 	const { successAlertPopup } = usePopupContext();
 	const router = useRouter();
 
-	const register = async () => {
+	const register = async (event: FormEvent) => {
+		event.preventDefault();
 		const errorInputTemp: ErrorInput = {};
 		if (!fullname)
 			errorInputTemp.fullname = ["Nama lengkap tidak boleh kosong"];
@@ -89,11 +90,14 @@ const Page = () => {
 	return (
 		<>
 			<main className="px-[16px] pt-[56px]">
-				<div className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto">
+				<form
+					className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto"
+					onSubmit={register}
+				>
 					<div className="text-sky-500 flex flex-col items-center">
 						<BsPuzzleFill size={48} />
 						<span className="text-[30px]">
-							Konseling<span className="font-bold">HUB</span>
+							Counseling<span className="font-bold">Hub</span>
 						</span>
 					</div>
 					<div className="flex gap-[5px] flex-col">
@@ -157,17 +161,17 @@ const Page = () => {
 
 					<div>
 						<button
+							type="submit"
 							className="filled-button ml-auto block"
-							onClick={register}
 							disabled={isProcessing}
 						>
 							Daftar
 						</button>
 					</div>
-				</div>
+				</form>
 			</main>
 			<footer className="text-[12px] text-center mt-[56px] mb-[5px]">
-				Copyright &copy; Teman Dengar 2024
+				Copyright &copy; Tessera Indonesia 2024
 			</footer>
 		</>
 	);

@@ -65,7 +65,7 @@ const AppLayoutProvider = ({
 			</nav>
 			<main
 				className={
-					"mt-[64px] duration-75 h-[1000px] " +
+					"mt-[64px] duration-75 " +
 					(minimize ? "xl:ml-[80px]" : "xl:ml-[250px]")
 				}
 			>

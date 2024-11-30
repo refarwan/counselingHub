@@ -2,7 +2,7 @@
 
 import TextField from "@/app/components/Textfiled";
 
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useState } from "react";
 
 import Link from "next/link";
 
@@ -36,47 +36,35 @@ const Page = () => {
 	const router = useRouter();
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
 
-	const handleSubmit = useCallback(
-		async (event: FormEvent) => {
-			event.preventDefault();
+	const handleSubmit = async (event: FormEvent) => {
+		event.preventDefault();
 
-			const inputErrors: errorInputType = { ...errorInputState };
+		const inputErrors: errorInputType = { ...errorInputState };
 
-			if (!username) inputErrors.username = ["Username tidak boleh kosong"];
-			if (!password) inputErrors.password = ["Password tidak boleh kosong"];
+		if (!username) inputErrors.username = ["Username tidak boleh kosong"];
+		if (!password) inputErrors.password = ["Password tidak boleh kosong"];
 
-			console.log(inputErrors);
+		console.log(inputErrors);
 
-			if (Object.keys(inputErrors).length)
-				return setErrorInputState(inputErrors);
+		if (Object.keys(inputErrors).length) return setErrorInputState(inputErrors);
 
-			loadingBarStart();
-			setIsProcessing(true);
-			await axiosInstance
-				.post("auth/login", {
-					username,
-					password,
-				})
-				.then(async (response) => {
-					await setAccessToken(response.data.accessToken);
-					router.push("/anggota/dashboard");
-				})
-				.catch((error: AxiosError) => {
-					axiosErrorHandling(error, setErrorInputState);
-				});
-			setIsProcessing(false);
-			loadingBarStop();
-		},
-		[
-			axiosErrorHandling,
-			loadingBarStart,
-			loadingBarStop,
-			errorInputState,
-			router,
-			username,
-			password,
-		]
-	);
+		loadingBarStart();
+		setIsProcessing(true);
+		await axiosInstance
+			.post("auth/login", {
+				username,
+				password,
+			})
+			.then(async (response) => {
+				await setAccessToken(response.data.accessToken);
+				router.push("/anggota/dashboard");
+			})
+			.catch((error: AxiosError) => {
+				axiosErrorHandling(error, setErrorInputState);
+			});
+		setIsProcessing(false);
+		loadingBarStop();
+	};
 
 	return (
 		<>
@@ -89,7 +77,7 @@ const Page = () => {
 					<div className="text-sky-500 flex flex-col items-center">
 						<BsPuzzleFill size={48} />
 						<span className="text-[30px]">
-							Konseling<span className="font-bold">HUB</span>
+							Counseling<span className="font-bold">Hub</span>
 						</span>
 					</div>
 					<div className="flex gap-[5px] flex-col">
@@ -136,7 +124,7 @@ const Page = () => {
 				</form>
 			</main>
 			<footer className="text-[12px] text-center mt-[56px] mb-[5px]">
-				Copyright &copy; Teman Dengar 2024
+				Copyright &copy; Tessera Indonesia 2024
 			</footer>
 		</>
 	);

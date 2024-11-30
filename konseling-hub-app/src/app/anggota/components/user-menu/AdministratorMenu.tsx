@@ -8,7 +8,6 @@ import {
 	FaEarthAsia,
 	FaFile,
 	FaFilePen,
-	FaHospitalUser,
 	FaNewspaper,
 	FaPenClip,
 } from "react-icons/fa6";
@@ -45,12 +44,6 @@ const AdministratorMenu = ({ minimize }: { minimize: boolean }) => {
 					minimize={minimize}
 					Icon={FaUserFriends}
 					text="Daftar Konseli"
-				/>
-				<LinkNavbar
-					href={"/anggota/pengajuan-konselor"}
-					minimize={minimize}
-					Icon={FaHospitalUser}
-					text="Pengajuan Konselor"
 				/>
 			</div>
 			<div className={"border-b border-b-slate-200 flex flex-col py-[8px]"}>

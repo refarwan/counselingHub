@@ -68,8 +68,8 @@ const TopAppBar = ({
 						{" "}
 						<BsPuzzleFill size={24} />
 						<span>
-							Konseling
-							<span className="font-bold">HUB</span>
+							Counseling
+							<span className="font-bold">Hub</span>
 						</span>
 					</Link>
 					{children ? <div>{children}</div> : null}

@@ -9,8 +9,8 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 
 export const metadata: Metadata = {
-	title: "Teman Dengar",
-	description: "Teman Dengar by Tessera Indonesia",
+	title: "CounselingHub",
+	description: "CounselingHub by Tessera Indonesia",
 };
 
 const poppins = Poppins({
