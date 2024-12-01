@@ -2,7 +2,7 @@
 
 import TextField from "@/app/components/Textfiled";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 
 import Link from "next/link";
 
@@ -36,42 +36,54 @@ const Page = () => {
 	const router = useRouter();
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
 
-	const handleSubmit = async (event: FormEvent) => {
-		event.preventDefault();
+	const login = useCallback(
+		async (event: FormEvent) => {
+			event.preventDefault();
 
-		const inputErrors: errorInputType = { ...errorInputState };
+			const inputErrors: errorInputType = { ...errorInputState };
 
-		if (!username) inputErrors.username = ["Username tidak boleh kosong"];
-		if (!password) inputErrors.password = ["Password tidak boleh kosong"];
+			if (!username) inputErrors.username = ["Username tidak boleh kosong"];
+			if (!password) inputErrors.password = ["Password tidak boleh kosong"];
 
-		console.log(inputErrors);
+			console.log(inputErrors);
 
-		if (Object.keys(inputErrors).length) return setErrorInputState(inputErrors);
+			if (Object.keys(inputErrors).length)
+				return setErrorInputState(inputErrors);
 
-		loadingBarStart();
-		setIsProcessing(true);
-		await axiosInstance
-			.post("auth/login", {
-				username,
-				password,
-			})
-			.then(async (response) => {
-				await setAccessToken(response.data.accessToken);
-				router.push("/anggota/dashboard");
-			})
-			.catch((error: AxiosError) => {
-				axiosErrorHandling({ error, setStateAction: setErrorInputState });
-			});
-		setIsProcessing(false);
-		loadingBarStop();
-	};
+			loadingBarStart();
+			setIsProcessing(true);
+			await axiosInstance
+				.post("auth/login", {
+					username,
+					password,
+				})
+				.then(async (response) => {
+					await setAccessToken(response.data.accessToken);
+					router.push("/anggota/dashboard");
+				})
+				.catch((error: AxiosError) => {
+					axiosErrorHandling({ error, setStateAction: setErrorInputState });
+				});
+			setIsProcessing(false);
+			loadingBarStop();
+		},
+		[
+			axiosErrorHandling,
+			errorInputState,
+			loadingBarStart,
+			loadingBarStop,
+			password,
+			router,
+			username,
+		]
+	);
 
 	return (
 		<>
 			<main className="px-[16px] pt-[56px]">
 				<form
 					className="flex flex-col gap-[16px] sm:w-[332px] xl:w-[428px] m-auto"
-					onSubmit={handleSubmit}
+					onSubmit={login}
 					method="post"
 				>
 					<div className="text-sky-500 flex flex-col items-center">

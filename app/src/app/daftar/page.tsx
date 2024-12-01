@@ -6,7 +6,7 @@ import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
 import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
 import { usePopupContext } from "@/app/components/PopupContext";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,49 +35,62 @@ const Page = () => {
 	const { successAlertPopup } = usePopupContext();
 	const router = useRouter();
 
-	const register = async (event: FormEvent) => {
-		event.preventDefault();
-		const errorInputTemp: ErrorInput = {};
-		if (!fullname)
-			errorInputTemp.fullname = ["Nama lengkap tidak boleh kosong"];
-		if (!email) errorInputTemp.email = ["Email tidak boleh kosong"];
-		if (!password) errorInputTemp.password = ["Sandi tidak boleh kosong"];
-		if (!confirmPassword)
-			errorInputTemp.confirmPassword = [
-				"Konfirmasi password tidak boleh kosong",
-			];
-		else if (password !== confirmPassword)
-			errorInputTemp.confirmPassword = ["Konfirmasi password tidak sama"];
+	const register = useCallback(
+		async (event: FormEvent) => {
+			event.preventDefault();
+			const errorInputTemp: ErrorInput = {};
+			if (!fullname)
+				errorInputTemp.fullname = ["Nama lengkap tidak boleh kosong"];
+			if (!email) errorInputTemp.email = ["Email tidak boleh kosong"];
+			if (!password) errorInputTemp.password = ["Sandi tidak boleh kosong"];
+			if (!confirmPassword)
+				errorInputTemp.confirmPassword = [
+					"Konfirmasi password tidak boleh kosong",
+				];
+			else if (password !== confirmPassword)
+				errorInputTemp.confirmPassword = ["Konfirmasi password tidak sama"];
 
-		if (Object.keys(errorInputTemp).length)
-			return setErrorInput(errorInputTemp);
+			if (Object.keys(errorInputTemp).length)
+				return setErrorInput(errorInputTemp);
 
-		setIsProcessing(true);
-		loadingBarStart();
+			setIsProcessing(true);
+			loadingBarStart();
 
-		await axiosInstance
-			.post("account/register", {
-				fullname,
-				email,
-				password,
-				confirmPassword,
-			})
-			.then((response) => {
-				successAlertPopup(response.data.message, () => {
-					router.push("/masuk");
+			await axiosInstance
+				.post("account/register", {
+					fullname,
+					email,
+					password,
+					confirmPassword,
+				})
+				.then((response) => {
+					successAlertPopup(response.data.message, () => {
+						router.push("/masuk");
+					});
+					setFullname("");
+					setEmail("");
+					setPassword("");
+					setconfirmPassword("");
+				})
+				.catch((error: AxiosError) => {
+					axiosErrorHandling({ error, setStateAction: setErrorInput });
 				});
-				setFullname("");
-				setEmail("");
-				setPassword("");
-				setconfirmPassword("");
-			})
-			.catch((error: AxiosError) => {
-				axiosErrorHandling({ error, setStateAction: setErrorInput });
-			});
 
-		loadingBarStop();
-		setIsProcessing(false);
-	};
+			loadingBarStop();
+			setIsProcessing(false);
+		},
+		[
+			axiosErrorHandling,
+			confirmPassword,
+			email,
+			fullname,
+			loadingBarStart,
+			loadingBarStop,
+			password,
+			router,
+			successAlertPopup,
+		]
+	);
 
 	const deleteErrorInput = (
 		name: "email" | "fullname" | "password" | "confirmPassword"

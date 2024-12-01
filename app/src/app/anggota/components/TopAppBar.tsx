@@ -6,7 +6,7 @@ import { deleteAccessToken } from "@/utils/server-auth";
 import { axiosInstance } from "@/utils/axios-intance";
 import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
 
-import { MouseEvent, ReactNode, useState } from "react";
+import { MouseEvent, ReactNode, useCallback, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,16 +41,19 @@ const TopAppBar = ({
 	const router = useRouter();
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
 
-	const logout = async (event: MouseEvent) => {
-		event.preventDefault();
-		loadingBarStart();
-		await axiosInstance
-			.delete("auth/logout")
-			.catch((error: AxiosError) => axiosErrorHandling({ error }));
-		deleteAccessToken();
-		loadingBarStop();
-		router.push("/masuk");
-	};
+	const logout = useCallback(
+		async (event: MouseEvent) => {
+			event.preventDefault();
+			loadingBarStart();
+			await axiosInstance
+				.delete("auth/logout")
+				.catch((error: AxiosError) => axiosErrorHandling({ error }));
+			deleteAccessToken();
+			loadingBarStop();
+			router.push("/masuk");
+		},
+		[axiosErrorHandling, loadingBarStart, loadingBarStop, router]
+	);
 
 	return (
 		<>
