@@ -49,7 +49,7 @@ const ReAuthenticate = () => {
 			<div className="text-sky-500 flex flex-col items-center">
 				<BsPuzzleFill size={80} />
 				<span className="text-[50px]">
-					Counseling<span className="font-bold">Hub</span>
+					counseling<span className="font-bold">Hub</span>
 				</span>
 			</div>
 			<FaSpinner size={30} className="animate-spin fill-sky-500" />
