@@ -18,7 +18,7 @@ import { BsPuzzleFill } from "react-icons/bs";
 const ReAuthenticate = () => {
 	const router = useRouter();
 
-	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
+	const axiosErrorHandling = useAxiosErrorHandlingContext();
 	const reAuthenticate = useCallback(async () => {
 		const isLogin = await checkIsLogin();
 		if (isLogin) {

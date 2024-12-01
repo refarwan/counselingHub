@@ -31,8 +31,8 @@ const Page = () => {
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
 	const loadingBar = useLoadingBarContext();
-	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
-	const { successAlertPopup } = usePopupContext();
+	const axiosErrorHandling = useAxiosErrorHandlingContext();
+	const popup = usePopupContext();
 	const router = useRouter();
 
 	const register = useCallback(
@@ -64,7 +64,7 @@ const Page = () => {
 					confirmPassword,
 				})
 				.then((response) => {
-					successAlertPopup(response.data.message, () => {
+					popup.success(response.data.message, () => {
 						router.push("/masuk");
 					});
 					setFullname("");
@@ -86,8 +86,8 @@ const Page = () => {
 			fullname,
 			loadingBar,
 			password,
+			popup,
 			router,
-			successAlertPopup,
 		]
 	);
 

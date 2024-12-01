@@ -34,7 +34,7 @@ const Page = () => {
 	const loadingBar = useLoadingBarContext();
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 	const router = useRouter();
-	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
+	const axiosErrorHandling = useAxiosErrorHandlingContext();
 
 	const login = useCallback(
 		async (event: FormEvent) => {

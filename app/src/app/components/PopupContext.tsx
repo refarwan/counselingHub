@@ -25,10 +25,10 @@ type ConfirmFunction = (
 ) => void;
 
 type PopupContext = {
-	alertPopup: AlertFunction;
-	successAlertPopup: AlertFunction;
-	errorAlertPopup: AlertFunction;
-	confirmPopup: ConfirmFunction;
+	alert: AlertFunction;
+	success: AlertFunction;
+	error: AlertFunction;
+	confirm: ConfirmFunction;
 };
 
 const popupContext = createContext<null | PopupContext>(null);
@@ -53,7 +53,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const alertPopup: AlertFunction = useCallback(
+	const alert: AlertFunction = useCallback(
 		(message: string, onConfirm?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -63,7 +63,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const successAlertPopup: AlertFunction = useCallback(
+	const success: AlertFunction = useCallback(
 		(message: string, onConfirm?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -73,7 +73,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const errorAlertPopup: AlertFunction = useCallback(
+	const error: AlertFunction = useCallback(
 		(message: string, onConfirm?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -83,7 +83,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const confirmPopup: ConfirmFunction = useCallback(
+	const confirm: ConfirmFunction = useCallback(
 		(message: string, onConfirm?: () => void, onCancel?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -127,9 +127,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 	}, [arrayPopup]);
 
 	return (
-		<popupContext.Provider
-			value={{ alertPopup, successAlertPopup, errorAlertPopup, confirmPopup }}
-		>
+		<popupContext.Provider value={{ alert, success, error, confirm }}>
 			{arrayPopup[0] ? (
 				<div
 					className={`bg-slate-950/30 w-screen h-screen top-0 left-0 z-40 fixed duration-75 pt-[200px] ${

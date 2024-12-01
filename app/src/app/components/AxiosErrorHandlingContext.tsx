@@ -1,6 +1,8 @@
 "use client";
 
+import { usePopupContext } from "./PopupContext";
 import { AxiosError } from "axios";
+
 import {
 	Dispatch,
 	ReactNode,
@@ -10,9 +12,7 @@ import {
 	useContext,
 } from "react";
 
-import { usePopupContext } from "./PopupContext";
-
-type AxiosErrorHandling = ({
+type AxiosErrorHandlingContext = ({
 	error,
 	setStateAction,
 	alertConfirmAction,
@@ -22,37 +22,33 @@ type AxiosErrorHandling = ({
 	alertConfirmAction?: () => void;
 }) => void;
 
-type AxiosErrorHandlingContext = {
-	axiosErrorHandling: AxiosErrorHandling;
-};
-
 const axiosErrorHandlingContext =
 	createContext<null | AxiosErrorHandlingContext>(null);
 
 const AxiosErrorHandlingProvider = ({ children }: { children: ReactNode }) => {
-	const { errorAlertPopup } = usePopupContext();
+	const popup = usePopupContext();
 
-	const axiosErrorHandling: AxiosErrorHandling = useCallback(
+	const axiosErrorHandling: AxiosErrorHandlingContext = useCallback(
 		({ error, setStateAction, alertConfirmAction }) => {
-			if (!error.response) return errorAlertPopup(error.message);
+			if (!error.response) return popup.error(error.message);
 
 			if (typeof error.response.data === "string")
-				return errorAlertPopup(error.response.data);
+				return popup.error(error.response.data);
 
 			type Data = { message: string | object };
 			const data = error.response.data as Data;
 			if (typeof data.message === "string")
-				return errorAlertPopup(data.message, () => {
+				return popup.error(data.message, () => {
 					if (alertConfirmAction) alertConfirmAction();
 				});
 
 			if (setStateAction) setStateAction(data.message);
 		},
-		[errorAlertPopup]
+		[popup]
 	);
 
 	return (
-		<axiosErrorHandlingContext.Provider value={{ axiosErrorHandling }}>
+		<axiosErrorHandlingContext.Provider value={axiosErrorHandling}>
 			{children}
 		</axiosErrorHandlingContext.Provider>
 	);

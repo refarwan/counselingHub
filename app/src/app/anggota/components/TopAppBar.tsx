@@ -39,7 +39,7 @@ const TopAppBar = ({
 
 	const loadingBar = useLoadingBarContext();
 	const router = useRouter();
-	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
+	const axiosErrorHandling = useAxiosErrorHandlingContext();
 
 	const logout = useCallback(
 		async (event: MouseEvent) => {
@@ -75,7 +75,9 @@ const TopAppBar = ({
 							<span className="font-bold">Hub</span>
 						</span>
 					</Link>
-					{children ? <div>{children}</div> : null}
+					<div className="w-full">
+						{children ? <div>{children}</div> : null}
+					</div>
 				</div>
 				<button
 					className="w-[40px] h-[40px] grid place-content-center"
