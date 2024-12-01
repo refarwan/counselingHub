@@ -31,7 +31,7 @@ const Page = () => {
 		setErrorInputState(data);
 	};
 
-	const { loadingBarStart, loadingBarStop } = useLoadingBarContext();
+	const loadingBar = useLoadingBarContext();
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 	const router = useRouter();
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
@@ -50,7 +50,7 @@ const Page = () => {
 			if (Object.keys(inputErrors).length)
 				return setErrorInputState(inputErrors);
 
-			loadingBarStart();
+			loadingBar.start();
 			setIsProcessing(true);
 			await axiosInstance
 				.post("auth/login", {
@@ -65,13 +65,12 @@ const Page = () => {
 					axiosErrorHandling({ error, setStateAction: setErrorInputState });
 				});
 			setIsProcessing(false);
-			loadingBarStop();
+			loadingBar.stop();
 		},
 		[
 			axiosErrorHandling,
 			errorInputState,
-			loadingBarStart,
-			loadingBarStop,
+			loadingBar,
 			password,
 			router,
 			username,

@@ -30,7 +30,7 @@ const Page = () => {
 	const [errorInput, setErrorInput] = useState<ErrorInput>({});
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-	const { loadingBarStart, loadingBarStop } = useLoadingBarContext();
+	const loadingBar = useLoadingBarContext();
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
 	const { successAlertPopup } = usePopupContext();
 	const router = useRouter();
@@ -54,7 +54,7 @@ const Page = () => {
 				return setErrorInput(errorInputTemp);
 
 			setIsProcessing(true);
-			loadingBarStart();
+			loadingBar.start();
 
 			await axiosInstance
 				.post("account/register", {
@@ -76,7 +76,7 @@ const Page = () => {
 					axiosErrorHandling({ error, setStateAction: setErrorInput });
 				});
 
-			loadingBarStop();
+			loadingBar.stop();
 			setIsProcessing(false);
 		},
 		[
@@ -84,8 +84,7 @@ const Page = () => {
 			confirmPassword,
 			email,
 			fullname,
-			loadingBarStart,
-			loadingBarStop,
+			loadingBar,
 			password,
 			router,
 			successAlertPopup,

@@ -37,22 +37,22 @@ const TopAppBar = ({
 }) => {
 	const [showMenu, setSHowMenu] = useState<boolean>(false);
 
-	const { loadingBarStart, loadingBarStop } = useLoadingBarContext();
+	const loadingBar = useLoadingBarContext();
 	const router = useRouter();
 	const { axiosErrorHandling } = useAxiosErrorHandlingContext();
 
 	const logout = useCallback(
 		async (event: MouseEvent) => {
 			event.preventDefault();
-			loadingBarStart();
+			loadingBar.start();
 			await axiosInstance
 				.delete("auth/logout")
 				.catch((error: AxiosError) => axiosErrorHandling({ error }));
 			deleteAccessToken();
-			loadingBarStop();
+			loadingBar.stop();
 			router.push("/masuk");
 		},
-		[axiosErrorHandling, loadingBarStart, loadingBarStop, router]
+		[axiosErrorHandling, loadingBar, router]
 	);
 
 	return (
