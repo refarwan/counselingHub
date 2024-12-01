@@ -10,10 +10,16 @@ export async function middleware(request: NextRequest) {
 	if (isLogin && (pathname === "/masuk" || pathname === "/daftar"))
 		return NextResponse.redirect(new URL("/anggota/dashboard", request.url));
 
+	if (isLogin && pathname === "/anggota")
+		return NextResponse.redirect(new URL("/anggota/dashboard", request.url));
+
+	if (!isLogin && pathname === "/anggota")
+		return NextResponse.redirect(new URL("/masuk", request.url));
+
 	if (!isLogin && pathname.startsWith("/anggota"))
 		return NextResponse.redirect(new URL("/masuk", request.url));
 }
 
 export const config = {
-	matcher: ["/masuk", "/daftar", "/anggota/:path*"],
+	matcher: ["/masuk", "/daftar", "/anggota/:path*", "/anggota"],
 };
