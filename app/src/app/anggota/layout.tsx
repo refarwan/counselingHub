@@ -1,9 +1,10 @@
-import AppLayoutProvider from "@/app/anggota/components/AppLayoutContext";
 import { getAuthData } from "@/utils/server-auth";
 import ReAuthenticate from "./components/ReAunthenticate";
-import AdministratorMenu from "./components/user-menu/AdministratorMenu";
-import KonselorMenu from "./components/user-menu/KonselorMenu";
-import KonseliMenu from "./components/user-menu/KonseliMenu";
+import TopBarProvider from "./components/TopBarContext";
+import NavBarContainer from "./components/NavBarContainer";
+import AdministratorMenu from "./components/AdministratorMenu";
+import KonselorMenu from "./components/KonselorMenu";
+import KonseliMenu from "./components/KonseliMenu";
 
 import { ReactNode } from "react";
 
@@ -13,22 +14,24 @@ const Layout = async ({ children }: { children: ReactNode }) => {
 	if (!authData) return <ReAuthenticate />;
 
 	return (
-		<AppLayoutProvider
+		<TopBarProvider
 			accountData={{
 				profilePicture: authData.profilePicture,
 				fullname: authData.fullname,
 				role: authData.role,
 			}}
-			Menu={
-				authData.role === "administrator"
-					? AdministratorMenu
-					: authData.role === "konselor"
-					? KonselorMenu
-					: KonseliMenu
-			}
 		>
+			<NavBarContainer>
+				{authData.role === "administrator" ? (
+					<AdministratorMenu />
+				) : authData.role === "konselor" ? (
+					<KonselorMenu />
+				) : (
+					<KonseliMenu />
+				)}
+			</NavBarContainer>
 			{children}
-		</AppLayoutProvider>
+		</TopBarProvider>
 	);
 };
 

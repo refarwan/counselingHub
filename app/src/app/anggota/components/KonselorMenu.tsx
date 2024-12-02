@@ -1,6 +1,6 @@
 "use client";
 
-import LinkNavbar from "../LinkNavbar";
+import LinkNavbar from "./LinkNavbar";
 
 import {
 	FaChartPie,
@@ -10,26 +10,29 @@ import {
 	FaPenClip,
 } from "react-icons/fa6";
 import { FaUserFriends, FaUserMd } from "react-icons/fa";
+import { useTopBarContext } from "./TopBarContext";
 
-const KonselorMenu = ({ minimize }: { minimize: boolean }) => {
+const KonselorMenu = () => {
+	const { minimizeDesktopNavbar } = useTopBarContext();
+
 	return (
 		<>
 			<div className={"border-b border-b-slate-200 flex flex-col py-[8px]"}>
 				<LinkNavbar
 					href={"/anggota/dashboard"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaChartPie}
 					text="Dashboard"
 				/>
 				<LinkNavbar
 					href={"/anggota/public-asessment"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaClipboardList}
 					text="Public Asessment"
 				/>
 				<LinkNavbar
 					href={"/anggota/konseling-saya"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaHandHoldingHeart}
 					text="Konseling Saya"
 				/>
@@ -38,20 +41,20 @@ const KonselorMenu = ({ minimize }: { minimize: boolean }) => {
 				<div
 					className={
 						"w-full h-[48px] px-[16px] leading-[48px] font-semibold text-[18px]" +
-						(minimize ? " xl:hidden" : "")
+						(minimizeDesktopNavbar ? " xl:hidden" : "")
 					}
 				>
 					Anggota
 				</div>
 				<LinkNavbar
 					href={"/anggota/daftar-konselor"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaUserMd}
 					text="Daftar Konselor"
 				/>
 				<LinkNavbar
 					href={"/anggota/daftar-konseli"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaUserFriends}
 					text="Daftar Konseli"
 				/>
@@ -61,20 +64,20 @@ const KonselorMenu = ({ minimize }: { minimize: boolean }) => {
 				<div
 					className={
 						"w-full h-[48px] px-[16px] leading-[48px] font-semibold text-[18px]" +
-						(minimize ? " xl:hidden" : "")
+						(minimizeDesktopNavbar ? " xl:hidden" : "")
 					}
 				>
 					Artikel
 				</div>
 				<LinkNavbar
 					href={"/anggota/daftar-artikel"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaNewspaper}
 					text="Daftar Artikel"
 				/>
 				<LinkNavbar
 					href={"/anggota/buat-artikel"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaPenClip}
 					text="Buat Artikel"
 				/>

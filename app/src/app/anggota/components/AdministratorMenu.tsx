@@ -1,6 +1,6 @@
 "use client";
 
-import LinkNavbar from "../LinkNavbar";
+import LinkNavbar from "./LinkNavbar";
 
 import {
 	FaChartPie,
@@ -12,14 +12,16 @@ import {
 	FaPenClip,
 } from "react-icons/fa6";
 import { FaUserFriends, FaUserMd } from "react-icons/fa";
+import { useTopBarContext } from "./TopBarContext";
 
-const AdministratorMenu = ({ minimize }: { minimize: boolean }) => {
+const AdministratorMenu = () => {
+	const { minimizeDesktopNavbar } = useTopBarContext();
 	return (
 		<>
 			<div className={"border-b border-b-slate-200 flex flex-col py-[8px]"}>
 				<LinkNavbar
 					href={"/anggota/dashboard"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaChartPie}
 					text="Dashboard"
 				/>
@@ -28,20 +30,20 @@ const AdministratorMenu = ({ minimize }: { minimize: boolean }) => {
 				<div
 					className={
 						"w-full h-[48px] px-[16px] leading-[48px] font-semibold text-[18px]" +
-						(minimize ? " xl:hidden" : "")
+						(minimizeDesktopNavbar ? " xl:hidden" : "")
 					}
 				>
 					Anggota
 				</div>
 				<LinkNavbar
 					href={"/anggota/daftar-konselor"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaUserMd}
 					text="Daftar Konselor"
 				/>
 				<LinkNavbar
 					href={"/anggota/daftar-konseli"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaUserFriends}
 					text="Daftar Konseli"
 				/>
@@ -50,20 +52,20 @@ const AdministratorMenu = ({ minimize }: { minimize: boolean }) => {
 				<div
 					className={
 						"w-full h-[48px] px-[16px] leading-[48px] font-semibold text-[18px]" +
-						(minimize ? " xl:hidden" : "")
+						(minimizeDesktopNavbar ? " xl:hidden" : "")
 					}
 				>
 					Halaman
 				</div>
 				<LinkNavbar
 					href={"/anggota/daftar-halaman"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaFile}
 					text="Daftar Halaman"
 				/>
 				<LinkNavbar
 					href={"/anggota/buat-halaman"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaFilePen}
 					text="Buat Halaman"
 				/>
@@ -72,20 +74,20 @@ const AdministratorMenu = ({ minimize }: { minimize: boolean }) => {
 				<div
 					className={
 						"w-full h-[48px] px-[16px] leading-[48px] font-semibold text-[18px]" +
-						(minimize ? " xl:hidden" : "")
+						(minimizeDesktopNavbar ? " xl:hidden" : "")
 					}
 				>
 					Artikel
 				</div>
 				<LinkNavbar
 					href={"/anggota/daftar-artikel"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaNewspaper}
 					text="Daftar Artikel"
 				/>
 				<LinkNavbar
 					href={"/anggota/buat-artikel"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaPenClip}
 					text="Buat Artikel"
 				/>
@@ -93,13 +95,13 @@ const AdministratorMenu = ({ minimize }: { minimize: boolean }) => {
 			<div className={"flex flex-col py-[8px]"}>
 				<LinkNavbar
 					href={"/anggota/public-asessment"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaClipboardList}
 					text="Public Asessment"
 				/>
 				<LinkNavbar
 					href={"/anggota/landing-page"}
-					minimize={minimize}
+					minimize={minimizeDesktopNavbar}
 					Icon={FaEarthAsia}
 					text="Landing Page"
 				/>

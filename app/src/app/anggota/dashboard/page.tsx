@@ -1,6 +1,9 @@
 "use client";
+
+import TemplateMain from "../components/TemplateMain";
+
 const Page = () => {
-	return "dashboard";
+	return <TemplateMain>Daftar Konselor</TemplateMain>;
 };
 
 export default Page;
