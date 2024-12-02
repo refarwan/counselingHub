@@ -17,7 +17,7 @@ const NavBarContainer = ({ children }: { children: ReactNode }) => {
 		>
 			<div
 				className={
-					"bg-white border-r border-r-slate-200 w-[250px] h-screen xl:h-full px-[8px] xl:w-full duration-75 fixed overflow-hidden xl:relative xl:overflow-y-scroll" +
+					"bg-white border-r border-r-slate-200 w-[250px] h-screen xl:h-full px-[8px] xl:w-full duration-75 fixed overflow-hidden xl:relative xl:overflow-y-scroll z-30" +
 					(minimizeDesktopNavbar ? " xl:px-[10px]" : "") +
 					(showMobileNavbar ? " left-0" : " left-[-250px] xl:left-0")
 				}
