@@ -7,7 +7,6 @@ import { deleteAccessToken } from "@/utils/server-auth";
 import AccountRole from "@/utils/types/account-role";
 
 import {
-	Component,
 	createContext,
 	Dispatch,
 	MouseEvent,

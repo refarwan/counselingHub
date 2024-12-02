@@ -130,12 +130,12 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		<popupContext.Provider value={{ alert, success, error, confirm }}>
 			{arrayPopup[0] ? (
 				<div
-					className={`bg-slate-950/30 w-screen h-screen top-0 left-0 z-40 fixed duration-75 pt-[200px] ${
+					className={`bg-slate-950/30 w-screen h-screen top-0 left-0 z-40 fixed duration-75 ${
 						popupVisible ? "visible" : "invisible"
 					}`}
 				>
 					<div
-						className={`bg-white w-[300px] p-[25px] rounded-[4px] flex flex-col items-center gap-[30px] m-auto ${
+						className={`bg-white w-[300px] p-[25px] rounded-[4px] flex flex-col items-center gap-[30px] m-auto duration-75 animate-popup-show ${
 							popupVisible ? "visible" : "invisible"
 						}`}
 					>
