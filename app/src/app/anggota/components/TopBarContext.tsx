@@ -126,7 +126,7 @@ const TopAppBarProvider = ({
 						}`}
 				>
 					<Link
-						href={"/"}
+						href={"/anggota/akun-saya"}
 						className="flex px-[12px] py-[8px] gap-[12px] border-b border-slate-200 base-link"
 					>
 						<FaCircleUser className="fill-slate-400" size={40} />
@@ -140,19 +140,19 @@ const TopAppBarProvider = ({
 					</Link>
 					<div>
 						<Link
-							href={"/edit-data-diri"}
+							href={"/anggota/edit-data-diri"}
 							className="flex px-[12px] gap-[12px] h-[48px] base-link items-center"
 						>
 							<FaAddressCard size={24} /> <span>Edit Data Diri</span>
 						</Link>
 						<Link
-							href={"/edit-akun"}
+							href={"/anggota/edit-akun"}
 							className="flex px-[12px] gap-[12px] h-[48px] base-link items-center"
 						>
 							<FaUserGear size={24} /> <span>Edit Akun</span>
 						</Link>
 						<Link
-							href={"/ubah-password"}
+							href={"/anggota/ubah-password"}
 							className="flex px-[12px] gap-[12px] h-[48px] base-link items-center"
 						>
 							<FaKey size={24} /> <span>Ubah Password</span>

@@ -35,13 +35,13 @@ const KonseliMenu = () => {
 					text="Konseling Saya"
 				/>
 				<LinkNavbar
-					href={"/anggota/asessment-saya"}
+					href={"/anggota/undangan-konseling"}
 					minimize={minimizeDesktopNavbar}
 					Icon={FaEnvelopeOpenText}
 					text="Undangan Konseling"
 				/>
 				<LinkNavbar
-					href={"/anggota/asessment-saya"}
+					href={"/anggota/daftar-konselor"}
 					minimize={minimizeDesktopNavbar}
 					Icon={FaUserMd}
 					text="Daftar Konselor"
