@@ -81,7 +81,7 @@ export class AccountService {
 			select: {
 				id: true,
 				birthday: true,
-				District: {
+				Regency: {
 					select: {
 						id: true,
 						name: true,

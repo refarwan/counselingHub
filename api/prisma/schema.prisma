@@ -35,20 +35,20 @@ model Account {
   birthday       DateTime? @db.Date
   gender         Gender?
   address        String?   @db.Text
-  districtId     Int?
+  regencyId      Int?
   education      String?
   profession     String?
   profilePicture String?
-  District       District? @relation(fields: [districtId], references: [id])
+  Regency        Regency?  @relation(fields: [regencyId], references: [id])
 }
 
 model Province {
-  id      Int        @id
+  id      Int       @id
   name    String
-  distric District[]
+  Regency Regency[]
 }
 
-model District {
+model Regency {
   id         Int       @id
   provinceId Int
   name       String

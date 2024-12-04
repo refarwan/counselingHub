@@ -18,7 +18,7 @@ async function seedAdministrator() {
 			birthday: new Date("1998-08-17"),
 			gender: "male",
 			address: "Butuh Lor RT 04, Triwidadi, Pajangan",
-			districtId: 3402,
+			regencyId: 3402,
 			education: "SMK N 1 Bantul",
 			profession: "Administrator Konseling Hub",
 		},

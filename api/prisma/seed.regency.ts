@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function seedDustrict() {
-	const district = [
+async function seedRegency() {
+	const regency = [
 		{ id: 1101, provinceId: 11, name: "KAB. ACEH SELATAN" },
 		{ id: 1102, provinceId: 11, name: "KAB. ACEH TENGGARA" },
 		{ id: 1103, provinceId: 11, name: "KAB. ACEH TIMUR" },
@@ -521,8 +521,8 @@ async function seedDustrict() {
 	];
 
 	await Promise.all(
-		district.map(async (item) => {
-			await prisma.district.upsert({
+		regency.map(async (item) => {
+			await prisma.regency.upsert({
 				where: { id: item.id },
 				update: {},
 				create: {
@@ -537,4 +537,4 @@ async function seedDustrict() {
 	console.log("District Seeding Complete");
 }
 
-export default seedDustrict;
+export default seedRegency;
