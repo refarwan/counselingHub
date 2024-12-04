@@ -31,7 +31,7 @@ async function bootstrap() {
 	try {
 		const allowedOrigin = JSON.parse(process.env.ALLOWED_ORIGIN);
 		if (typeof allowedOrigin !== "object") throw new Error();
-	} catch (error) {
+	} catch {
 		Logger.error(
 			'wrong ALLOWED_ORIGIN value in environment variable (sample: ["https://www.frontend-1.com", "https://www.frontend-2.com"])',
 		);

@@ -6,7 +6,6 @@ import { CacheAccountDataType } from "../types/cache-account-data";
 
 import {
 	BadRequestException,
-	ForbiddenException,
 	Inject,
 	Injectable,
 	NotFoundException,
