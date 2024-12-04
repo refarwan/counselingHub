@@ -14,6 +14,7 @@ import { CACHE_MANAGER, Cache } from "@nestjs/cache-manager";
 
 import { hashSync } from "bcrypt";
 import { randomBytes } from "crypto";
+import { DateTime } from "luxon";
 
 @Injectable()
 export class AccountService {
@@ -73,5 +74,33 @@ export class AccountService {
 		this.cacheManager.set(`cacheAccountData:${account.username}`, accountData);
 
 		return { message: "Berhasil membuat akun" };
+	}
+
+	async getAccoutData(id: number) {
+		const accountData = await this.prismaService.account.findFirst({
+			select: {
+				id: true,
+				birthday: true,
+				District: {
+					select: {
+						id: true,
+						name: true,
+						Province: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+					},
+				},
+			},
+			where: {
+				id,
+			},
+		});
+
+		// console.log(typeof DateTime.fromJSDate(accountData.birthday).toISODate());
+
+		return accountData;
 	}
 }
