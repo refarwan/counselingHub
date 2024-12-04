@@ -3,14 +3,20 @@ import { Gender } from "@prisma/client";
 type AccountData = {
 	profilePicture: null | string;
 	username: string;
-	email: null | string;
-	phone: null | string;
+	email: string;
+	phoneNumber: null | string;
 	fullname: string;
-	birthday: Date;
+	birthday: null | string;
 	gender: Gender;
 	address: null | string;
-	city: null | string;
-	province: null | string;
+	regency: null | {
+		id: number;
+		name: string;
+	};
+	province: null | {
+		id: number;
+		name: string;
+	};
 	education: null | string;
 	profession: null | string;
 };

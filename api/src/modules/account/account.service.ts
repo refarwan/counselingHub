@@ -1,6 +1,5 @@
 import { PrismaService } from "src/prisma.service";
 import { RegisterDto } from "./dto/register.dto";
-
 import { CacheAccountDataType } from "../types/cache-account-data";
 
 import {
@@ -9,12 +8,14 @@ import {
 	Inject,
 	Injectable,
 	InternalServerErrorException,
+	NotFoundException,
 } from "@nestjs/common";
 import { CACHE_MANAGER, Cache } from "@nestjs/cache-manager";
 
 import { hashSync } from "bcrypt";
 import { randomBytes } from "crypto";
 import { DateTime } from "luxon";
+import AccountData from "./types/account-data";
 
 @Injectable()
 export class AccountService {
@@ -76,11 +77,17 @@ export class AccountService {
 		return { message: "Berhasil membuat akun" };
 	}
 
-	async getAccoutData(id: number) {
+	async getAccoutData(id: number): Promise<AccountData> {
 		const accountData = await this.prismaService.account.findFirst({
 			select: {
-				id: true,
+				profilePicture: true,
+				username: true,
+				email: true,
+				phoneNumber: true,
+				fullname: true,
 				birthday: true,
+				gender: true,
+				address: true,
 				Regency: {
 					select: {
 						id: true,
@@ -93,14 +100,31 @@ export class AccountService {
 						},
 					},
 				},
+				education: true,
+				profession: true,
 			},
 			where: {
 				id,
 			},
 		});
 
-		// console.log(typeof DateTime.fromJSDate(accountData.birthday).toISODate());
-
-		return accountData;
+		if (!accountData)
+			throw new NotFoundException({ message: "Akun tidak ditemukan" });
+		return {
+			profilePicture: null,
+			username: accountData.username,
+			email: accountData.email,
+			phoneNumber: accountData.phoneNumber,
+			fullname: accountData.fullname,
+			birthday: accountData.birthday
+				? DateTime.fromJSDate(accountData.birthday).toISODate()
+				: null,
+			gender: accountData.gender,
+			address: accountData.address,
+			regency: accountData.Regency,
+			province: accountData.Regency ? accountData.Regency.Province : null,
+			education: accountData.education,
+			profession: accountData.profession,
+		};
 	}
 }

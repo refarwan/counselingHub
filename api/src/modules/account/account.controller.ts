@@ -1,6 +1,7 @@
 import { AuthGuard } from "src/guards/auth.guard";
 import { AccountService } from "./account.service";
 import { RegisterDto } from "./dto/register.dto";
+import AccountData from "./types/account-data";
 
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 
@@ -15,7 +16,7 @@ export class AccountController {
 
 	@Get("my-profile")
 	@UseGuards(AuthGuard)
-	async getMyProfile(@Req() request: Request) {
+	async getMyProfile(@Req() request: Request): Promise<AccountData> {
 		return await this.accountService.getAccoutData(request["accountId"]);
 	}
 }
