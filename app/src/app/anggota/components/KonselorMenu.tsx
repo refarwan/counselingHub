@@ -10,10 +10,10 @@ import {
 	FaPenClip,
 } from "react-icons/fa6";
 import { FaUserFriends, FaUserMd } from "react-icons/fa";
-import { useTopBarContext } from "./TopBarContext";
+import { useTopBar } from "./TopBar";
 
 const KonselorMenu = () => {
-	const { minimizeDesktopNavbar } = useTopBarContext();
+	const { minimizeDesktopNavbar } = useTopBar();
 
 	return (
 		<>

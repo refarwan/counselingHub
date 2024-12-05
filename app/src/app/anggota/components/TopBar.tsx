@@ -1,7 +1,7 @@
 "use client";
 
-import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
-import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
+import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
+import { useLoadingBar } from "@/app/components/LoadingBar";
 import { axiosInstance } from "@/utils/axios-intance";
 import { deleteAccessToken } from "@/utils/server-auth";
 import AccountRole from "@/utils/types/account-role";
@@ -31,14 +31,14 @@ import {
 	FaUserGear,
 } from "react-icons/fa6";
 
-type TopBarContext = {
+type TopBar = {
 	minimizeDesktopNavbar: boolean;
 	showMobileNavbar: boolean;
 	navbarTogleFunction: () => void;
 	setAdditionTopBarComponent: Dispatch<SetStateAction<null | ReactNode>>;
 };
 
-const topBarContext = createContext<null | TopBarContext>(null);
+const topBarContext = createContext<null | TopBar>(null);
 
 const TopAppBarProvider = ({
 	children,
@@ -53,22 +53,22 @@ const TopAppBarProvider = ({
 }) => {
 	const [showAccountMenu, setShowAccountMenu] = useState<boolean>(false);
 
-	const loadingBar = useLoadingBarContext();
+	const { loadingBarStart, loadingBarStop } = useLoadingBar();
 	const router = useRouter();
-	const axiosErrorHandling = useAxiosErrorHandlingContext();
+	const { axiosErrorHandling } = useAxiosErrorHandling();
 
 	const logout = useCallback(
 		async (event: MouseEvent) => {
 			event.preventDefault();
-			loadingBar.start();
+			loadingBarStart();
 			await axiosInstance
 				.delete("auth/logout")
 				.catch((error: AxiosError) => axiosErrorHandling({ error }));
 			deleteAccessToken();
-			loadingBar.stop();
+			loadingBarStop();
 			router.push("/masuk");
 		},
-		[axiosErrorHandling, loadingBar, router]
+		[axiosErrorHandling, loadingBarStart, loadingBarStop, router]
 	);
 
 	const [minimizeDesktopNavbar, setMinimizeDesktopNavbar] =
@@ -174,6 +174,6 @@ const TopAppBarProvider = ({
 
 export default TopAppBarProvider;
 
-export const useTopBarContext = () => {
-	return useContext(topBarContext) as TopBarContext;
+export const useTopBar = () => {
+	return useContext(topBarContext) as TopBar;
 };

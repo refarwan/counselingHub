@@ -6,7 +6,7 @@ import {
 	getAccessToken,
 	setAccessToken,
 } from "@/utils/server-auth";
-import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
+import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
 
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ import { BsPuzzleFill } from "react-icons/bs";
 const ReAuthenticate = () => {
 	const router = useRouter();
 
-	const axiosErrorHandling = useAxiosErrorHandlingContext();
+	const { axiosErrorHandling } = useAxiosErrorHandling();
 	const reAuthenticate = useCallback(async () => {
 		const isLogin = await checkIsLogin();
 		if (isLogin) {

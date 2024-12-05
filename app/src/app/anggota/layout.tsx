@@ -1,6 +1,6 @@
 import { getAuthData } from "@/utils/server-auth";
 import ReAuthenticate from "./components/ReAunthenticate";
-import TopBarProvider from "./components/TopBarContext";
+import TopBarProvider from "./components/TopBar";
 import NavBarContainer from "./components/NavBarContainer";
 import AdministratorMenu from "./components/AdministratorMenu";
 import KonselorMenu from "./components/KonselorMenu";

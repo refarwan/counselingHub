@@ -2,9 +2,9 @@
 
 import TextField from "@/app/components/Textfiled";
 import { axiosInstance } from "@/utils/axios-intance";
-import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
-import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
-import { usePopupContext } from "@/app/components/PopupContext";
+import { useLoadingBarContext } from "@/app/components/LoadingBar";
+import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandling";
+import { usePopupContext } from "@/app/components/Popup";
 
 import { FormEvent, useCallback, useState } from "react";
 

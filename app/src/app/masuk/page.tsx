@@ -7,9 +7,9 @@ import { FormEvent, useCallback, useState } from "react";
 import Link from "next/link";
 
 import { BsPuzzleFill } from "react-icons/bs";
-import { useLoadingBarContext } from "@/app/components/LoadingBarContext";
+import { useLoadingBarContext } from "@/app/components/LoadingBar";
 import { useRouter } from "next/navigation";
-import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
+import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandling";
 import { axiosInstance } from "@/utils/axios-intance";
 import { setAccessToken } from "@/utils/server-auth";
 import { AxiosError } from "axios";

@@ -16,22 +16,22 @@ import {
 	FaCircleQuestion,
 } from "react-icons/fa6";
 
-type AlertFunction = (message: string, onConfirm?: () => void) => void;
+type Alert = (message: string, onConfirm?: () => void) => void;
 
-type ConfirmFunction = (
+type Confirm = (
 	message: string,
 	onConfirm?: () => void,
 	onCancel?: () => void
 ) => void;
 
-type PopupContext = {
-	alert: AlertFunction;
-	success: AlertFunction;
-	error: AlertFunction;
-	confirm: ConfirmFunction;
+type Popup = {
+	alertPopup: Alert;
+	successPopup: Alert;
+	errorPopup: Alert;
+	confirmPopup: Confirm;
 };
 
-const popupContext = createContext<null | PopupContext>(null);
+const popupContext = createContext<null | Popup>(null);
 
 const PopupProvider = ({ children }: { children: ReactNode }) => {
 	type AlertPopup = {
@@ -53,7 +53,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const alert: AlertFunction = useCallback(
+	const alertPopup: Alert = useCallback(
 		(message: string, onConfirm?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -63,7 +63,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const success: AlertFunction = useCallback(
+	const successPopup: Alert = useCallback(
 		(message: string, onConfirm?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -73,7 +73,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const error: AlertFunction = useCallback(
+	const errorPopup: Alert = useCallback(
 		(message: string, onConfirm?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -83,7 +83,7 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 		[]
 	);
 
-	const confirm: ConfirmFunction = useCallback(
+	const confirmPopup: Confirm = useCallback(
 		(message: string, onConfirm?: () => void, onCancel?: () => void) => {
 			setArrayPopup((prev) => [
 				...prev,
@@ -127,7 +127,9 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 	}, [arrayPopup]);
 
 	return (
-		<popupContext.Provider value={{ alert, success, error, confirm }}>
+		<popupContext.Provider
+			value={{ alertPopup, successPopup, errorPopup, confirmPopup }}
+		>
 			{arrayPopup[0] ? (
 				<div
 					className={`bg-slate-950/30 w-screen h-screen top-0 left-0 z-40 fixed duration-75 ${
@@ -181,6 +183,6 @@ const PopupProvider = ({ children }: { children: ReactNode }) => {
 
 export default PopupProvider;
 
-export const usePopupContext = () => {
-	return useContext(popupContext) as PopupContext;
+export const usePopup = () => {
+	return useContext(popupContext) as Popup;
 };

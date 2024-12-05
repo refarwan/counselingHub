@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useTopBarContext } from "./TopBarContext";
+import { useTopBar } from "./TopBar";
 
 const TemplateMain = ({
 	children,
@@ -10,7 +10,7 @@ const TemplateMain = ({
 	children: ReactNode;
 	className?: string;
 }) => {
-	const { minimizeDesktopNavbar } = useTopBarContext();
+	const { minimizeDesktopNavbar } = useTopBar();
 
 	return (
 		<main

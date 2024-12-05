@@ -12,10 +12,10 @@ import {
 	FaPenClip,
 } from "react-icons/fa6";
 import { FaUserFriends, FaUserMd } from "react-icons/fa";
-import { useTopBarContext } from "./TopBarContext";
+import { useTopBar } from "./TopBar";
 
 const AdministratorMenu = () => {
-	const { minimizeDesktopNavbar } = useTopBarContext();
+	const { minimizeDesktopNavbar } = useTopBar();
 	return (
 		<>
 			<div className={"border-b border-b-slate-200 flex flex-col py-[8px]"}>

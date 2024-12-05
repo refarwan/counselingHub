@@ -1,11 +1,11 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useTopBarContext } from "./TopBarContext";
+import { useTopBar } from "./TopBar";
 
 const NavBarContainer = ({ children }: { children: ReactNode }) => {
 	const { minimizeDesktopNavbar, showMobileNavbar, navbarTogleFunction } =
-		useTopBarContext();
+		useTopBar();
 	return (
 		<nav
 			className={

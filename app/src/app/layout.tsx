@@ -1,7 +1,7 @@
 import "./globals.css";
-import LoadingBarProvider from "@/app/components/LoadingBarContext";
-import PopupProvider from "@/app/components/PopupContext";
-import AxiosErrorHandlingProvider from "@/app/components/AxiosErrorHandlingContext";
+import LoadingBarProvider from "@/app/components/LoadingBar";
+import PopupProvider from "@/app/components/Popup";
+import AxiosErrorHandlingProvider from "@/app/components/AxiosErrorHandling";
 
 import { ReactNode } from "react";
 

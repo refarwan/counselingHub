@@ -1,6 +1,6 @@
 "use client";
 
-import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandlingContext";
+import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
 import TemplateMain from "../components/TemplateMain";
 import { axiosInstanceWithToken } from "@/utils/axios-intance";
 import LoadingPage from "../components/LoadingPage";
@@ -37,7 +37,7 @@ const Page = () => {
 		undefined
 	);
 
-	const axiosErrorHandling = useAxiosErrorHandlingContext();
+	const { axiosErrorHandling } = useAxiosErrorHandling();
 	useEffect(() => {
 		axiosInstanceWithToken("/account/my-profile")
 			.then((response) => {

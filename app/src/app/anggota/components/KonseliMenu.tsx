@@ -8,10 +8,10 @@ import {
 } from "react-icons/fa6";
 import { FaUserMd } from "react-icons/fa";
 import LinkNavbar from "./LinkNavbar";
-import { useTopBarContext } from "./TopBarContext";
+import { useTopBar } from "./TopBar";
 
 const KonseliMenu = () => {
-	const { minimizeDesktopNavbar } = useTopBarContext();
+	const { minimizeDesktopNavbar } = useTopBar();
 
 	return (
 		<>
