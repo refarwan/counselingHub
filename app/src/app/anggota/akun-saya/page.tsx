@@ -53,7 +53,7 @@ const Page = () => {
 
 	const loadAuthData = useCallback(async () => {
 		const tempAuthData = await getAuthData();
-		tempAuthData ? setAuthData(tempAuthData.role) : null;
+		if (tempAuthData) setAuthData(tempAuthData.role);
 	}, []);
 
 	useEffect(() => {

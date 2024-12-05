@@ -2,9 +2,9 @@
 
 import TextField from "@/app/components/Textfiled";
 import { axiosInstance } from "@/utils/axios-intance";
-import { useLoadingBarContext } from "@/app/components/LoadingBar";
-import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandling";
-import { usePopupContext } from "@/app/components/Popup";
+import { useLoadingBar } from "@/app/components/LoadingBar";
+import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
+import { usePopup } from "@/app/components/Popup";
 
 import { FormEvent, useCallback, useState } from "react";
 
@@ -30,9 +30,9 @@ const Page = () => {
 	const [errorInput, setErrorInput] = useState<ErrorInput>({});
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-	const loadingBar = useLoadingBarContext();
-	const axiosErrorHandling = useAxiosErrorHandlingContext();
-	const popup = usePopupContext();
+	const { loadingBarStart, loadingBarStop } = useLoadingBar();
+	const { axiosErrorHandling } = useAxiosErrorHandling();
+	const { successPopup } = usePopup();
 	const router = useRouter();
 
 	const register = useCallback(
@@ -54,7 +54,7 @@ const Page = () => {
 				return setErrorInput(errorInputTemp);
 
 			setIsProcessing(true);
-			loadingBar.start();
+			loadingBarStart();
 
 			await axiosInstance
 				.post("account/register", {
@@ -64,7 +64,7 @@ const Page = () => {
 					confirmPassword,
 				})
 				.then((response) => {
-					popup.success(response.data.message, () => {
+					successPopup(response.data.message, () => {
 						router.push("/masuk");
 					});
 					setFullname("");
@@ -76,7 +76,7 @@ const Page = () => {
 					axiosErrorHandling({ error, setStateAction: setErrorInput });
 				});
 
-			loadingBar.stop();
+			loadingBarStop();
 			setIsProcessing(false);
 		},
 		[
@@ -84,9 +84,10 @@ const Page = () => {
 			confirmPassword,
 			email,
 			fullname,
-			loadingBar,
+			loadingBarStart,
+			loadingBarStop,
 			password,
-			popup,
+			successPopup,
 			router,
 		]
 	);

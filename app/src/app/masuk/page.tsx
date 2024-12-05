@@ -7,9 +7,9 @@ import { FormEvent, useCallback, useState } from "react";
 import Link from "next/link";
 
 import { BsPuzzleFill } from "react-icons/bs";
-import { useLoadingBarContext } from "@/app/components/LoadingBar";
+import { useLoadingBar } from "@/app/components/LoadingBar";
 import { useRouter } from "next/navigation";
-import { useAxiosErrorHandlingContext } from "@/app/components/AxiosErrorHandling";
+import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
 import { axiosInstance } from "@/utils/axios-intance";
 import { setAccessToken } from "@/utils/server-auth";
 import { AxiosError } from "axios";
@@ -31,10 +31,10 @@ const Page = () => {
 		setErrorInputState(data);
 	};
 
-	const loadingBar = useLoadingBarContext();
+	const { loadingBarStart, loadingBarStop } = useLoadingBar();
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 	const router = useRouter();
-	const axiosErrorHandling = useAxiosErrorHandlingContext();
+	const { axiosErrorHandling } = useAxiosErrorHandling();
 
 	const login = useCallback(
 		async (event: FormEvent) => {
@@ -50,7 +50,7 @@ const Page = () => {
 			if (Object.keys(inputErrors).length)
 				return setErrorInputState(inputErrors);
 
-			loadingBar.start();
+			loadingBarStart();
 			setIsProcessing(true);
 			await axiosInstance
 				.post("auth/login", {
@@ -65,12 +65,13 @@ const Page = () => {
 					axiosErrorHandling({ error, setStateAction: setErrorInputState });
 				});
 			setIsProcessing(false);
-			loadingBar.stop();
+			loadingBarStop();
 		},
 		[
 			axiosErrorHandling,
 			errorInputState,
-			loadingBar,
+			loadingBarStart,
+			loadingBarStop,
 			password,
 			router,
 			username,
