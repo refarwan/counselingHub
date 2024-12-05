@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Dalam Pengembangan | CounselingHub",
+	title: "Akun Saya | CounselingHub",
 };
 
 const Layout = ({ children }: { children: ReactNode }) => {
