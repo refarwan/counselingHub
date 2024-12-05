@@ -4,8 +4,9 @@ import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
 import TemplateMain from "../components/TemplateMain";
 import { axiosInstanceWithToken } from "@/utils/axios-intance";
 import LoadingPage from "../components/LoadingPage";
+import { getAuthData } from "@/utils/server-auth";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { FaCircleUser } from "react-icons/fa6";
 import { AxiosError } from "axios";
@@ -36,6 +37,7 @@ const Page = () => {
 	const [accountData, setAccountData] = useState<undefined | AccountData>(
 		undefined
 	);
+	const [authData, setAuthData] = useState<undefined | string>(undefined);
 
 	const { axiosErrorHandling } = useAxiosErrorHandling();
 	useEffect(() => {
@@ -49,7 +51,16 @@ const Page = () => {
 			});
 	}, [axiosErrorHandling]);
 
-	return accountData === undefined ? (
+	const loadAuthData = useCallback(async () => {
+		const tempAuthData = await getAuthData();
+		tempAuthData ? setAuthData(tempAuthData.role) : null;
+	}, []);
+
+	useEffect(() => {
+		loadAuthData();
+	}, [loadAuthData]);
+
+	return accountData === undefined || authData === undefined ? (
 		<LoadingPage />
 	) : (
 		<TemplateMain>
@@ -60,7 +71,7 @@ const Page = () => {
 						{accountData.fullname}
 					</div>
 					<div className="bg-sky-500 text-white px-[8px] rounded-[4px] w-max">
-						Administrator
+						{authData.charAt(0).toUpperCase() + authData.slice(1)}
 					</div>
 				</div>
 				<div className="flex flex-col px-[16px] border border-slate-200 rounded-[4px]">
