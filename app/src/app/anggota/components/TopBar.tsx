@@ -122,7 +122,7 @@ const TopAppBarProvider = ({
 				<div
 					className={`
 						bg-white shadow w-[280px] absolute top-[52px] right-[8px] sm:right-[16px] rounded-[4px] overflow-hidden duration-75 ${
-							showAccountMenu ? "h-[265px] pb-[8px]" : "h-0 pb-0"
+							showAccountMenu ? "h-[217px] pb-[8px]" : "h-0 pb-0"
 						}`}
 				>
 					<Link
@@ -139,12 +139,6 @@ const TopAppBarProvider = ({
 						</div>
 					</Link>
 					<div>
-						<Link
-							href={"/anggota/edit-data-diri"}
-							className="flex px-[12px] gap-[12px] h-[48px] base-link items-center"
-						>
-							<FaAddressCard size={24} /> <span>Edit Data Diri</span>
-						</Link>
 						<Link
 							href={"/anggota/edit-akun"}
 							className="flex px-[12px] gap-[12px] h-[48px] base-link items-center"
