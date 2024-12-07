@@ -1,136 +1,113 @@
 "use client";
 
-import {
-	ComponentType,
-	Dispatch,
-	SetStateAction,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { ComponentType, RefObject, useEffect, useState } from "react";
 
 import { FaExclamationCircle } from "react-icons/fa";
 import clsx from "clsx";
 
 type Props = {
+	ref?: RefObject<HTMLInputElement>;
 	type?: string;
 	name?: string;
 	value?: string;
 	placeholder?: string;
 	label?: string;
 	supporting?: string | string[];
-	leadingIcon?: ComponentType<{ className?: string; size?: number }>;
+	LeadingIcon?: ComponentType<{ className?: string; size?: number }>;
 	disabled?: boolean;
 	isError?: boolean;
-	setStateAction?: Dispatch<SetStateAction<string>>;
 	onChange?: () => void;
+	className?: string;
 };
 
 const TextField = ({
+	ref,
 	type = "text",
 	name,
 	value = "",
 	placeholder,
 	label,
 	supporting,
-	leadingIcon: LeadingIcon,
+	LeadingIcon,
 	disabled = false,
 	isError = false,
-	setStateAction,
 	onChange,
+	className,
 }: Props) => {
 	const [isActive, setIsActive] = useState<boolean>(false);
-	const refInput = useRef<HTMLInputElement>(null);
-	const [currentValue, setCurrentValue] = useState<string>(value);
+	const [currentValue, setCurrentValue] = useState<string | undefined>(
+		undefined
+	);
 
 	useEffect(() => {
+		if (value && ref && ref.current) ref.current.value = value;
 		setCurrentValue(value);
-	}, [value]);
-
-	const focus = () => {
-		if (!disabled) {
-			setIsActive(true);
-			setTimeout(() => {
-				refInput.current?.focus();
-			}, 1);
-		}
-	};
+	}, [value, ref]);
 
 	return (
-		<div className="flex flex-col gap-[4px] pt-[8px] relative">
+		<div
+			className={`${className} min-h-[64px] flex flex-col gap-[4px] pt-[8px] relative`}
+		>
 			{label ? (
 				<div
-					className={
-						"h-[24px] absolute transition-[font-size,_left,_top,_padding]" +
-						(disabled ? " bg-slate-100" : " bg-white") +
-						(disabled ? " text-slate-400" : "") +
-						(!disabled && isError && (isActive || currentValue)
-							? " text-red-700"
-							: "") +
-						(!disabled && isActive && !isError ? " text-sky-500" : "") +
-						(isActive || currentValue
-							? " text-[12px] px-[4px] top-0 left-[12px] h-[16px]"
-							: ` top-[24px] ${LeadingIcon ? "left-[52px]" : "left-[16px]"}`)
-					}
-					onClick={focus}
+					className={`h-[24px] absolute transition-[font-size,_left,_top,_padding] z-20${clsx(
+						{
+							" bg-slate-100 text-slate-400": disabled,
+							" bg-white": !disabled,
+							" text-red-700": !disabled && isError,
+							" text-sky-500": !disabled && !isError && isActive,
+						}
+					)} ${
+						isActive || currentValue
+							? "text-[12px] px-[4px] top-0 left-[12px] h-[16px]"
+							: `top-[24px] ${LeadingIcon ? "left-[52px]" : "left-[16px]"}`
+					}`}
 				>
 					{label}
 				</div>
 			) : null}
-			<div
-				className={`h-[56px] rounded overflow-hidden flex items-center gap-[16px] cursor-text ${
-					!disabled && isActive
-						? " border-[2px] pr-[14px]"
-						: " border pr-[15px]"
-				} ${
+			<input
+				type={type}
+				name={name}
+				ref={ref}
+				placeholder={placeholder}
+				className={`border-[1px] rounded-[4px] w-full h-[56px] ${
 					LeadingIcon
-						? !disabled && isActive
-							? " pl-[10px]"
-							: " pl-[11px]"
-						: !disabled && isActive
-						? " pl-[14px]"
-						: " pl-[15px]"
-				} ${clsx({
-					"border-slate-950": !disabled && !isError && !isActive,
-					"border-slate-400 bg-slate-100": disabled,
-					"border-red-700": !disabled && isError,
-					"border-sky-500": !disabled && !isError && isActive,
-				})}`}
-				onClick={focus}
-			>
-				{LeadingIcon ? (
-					<LeadingIcon size={24} className={disabled ? "fill-slate-400" : ""} />
-				) : null}
-				<input
-					type={type}
-					name={name}
-					ref={refInput}
-					placeholder={placeholder}
-					onBlur={() => setIsActive(false)}
-					onFocus={() => setIsActive(true)}
-					className={
-						"outline-none flex-1" +
-						(disabled ? " bg-slate-100 text-slate-400" : "")
-					}
-					onChange={(event) => {
-						setCurrentValue(event.target.value);
-						if (setStateAction) setStateAction(event.target.value);
-						if (onChange) onChange();
-					}}
-					value={currentValue}
-					disabled={disabled}
+						? "pl-[51px] focus:pl-[50px]"
+						: "pl-[15px] focus:pl-[14px]"
+				} pr-[15px] appearance-none outline-none bg-transparent relative z-10 focus:border-[2px] disabled:opacity-100 disabled:z-0 disabled:border-slate-400 disabled:bg-slate-100 disabled:text-slate-400 ${
+					isError ? "border-red-700" : "border-slate-950 focus:border-sky-500"
+				}`}
+				disabled={disabled}
+				onFocus={() => setIsActive(true)}
+				onBlur={() => setIsActive(false)}
+				onChange={(event) => {
+					setCurrentValue(event.target.value);
+					if (onChange) onChange();
+				}}
+			/>
+			{LeadingIcon ? (
+				<LeadingIcon
+					size={24}
+					className={`absolute left-[12px] top-[24px] ${clsx({
+						"fill-red-700": isError,
+						"fill-sky-500": isActive && !isError,
+						"fill-slate-400": disabled,
+					})}`}
 				/>
-			</div>
+			) : null}
 			{supporting ? (
 				typeof supporting === "string" ? (
 					<div
 						className={`text-[12px] pr-[16px] flex gap-[8px] items-center ${clsx(
-							disabled && " text-slate-400",
-							!isError && " pl-[16px]",
-							isError && !disabled && " text-red-700"
+							{
+								" text-slate-400": disabled,
+								" pl-[16px]": !isError || disabled,
+								" text-red-700": isError && !disabled,
+							}
 						)}`}
 					>
-						{isError ? <FaExclamationCircle size={16} /> : null}
+						{isError && !disabled ? <FaExclamationCircle size={16} /> : null}
 						{supporting}
 					</div>
 				) : (
@@ -138,12 +115,14 @@ const TextField = ({
 						<div
 							key={index}
 							className={`text-[12px] pr-[16px] flex gap-[8px] items-center ${clsx(
-								disabled && " text-slate-400",
-								!isError && " pl-[16px]",
-								isError && !disabled && " text-red-700"
+								{
+									" text-slate-400": disabled,
+									" pl-[16px]": !isError || disabled,
+									" text-red-700": isError && !disabled,
+								}
 							)}`}
 						>
-							{isError ? <FaExclamationCircle size={16} /> : null}
+							{isError && !disabled ? <FaExclamationCircle size={16} /> : null}
 							{item}
 						</div>
 					))
