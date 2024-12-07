@@ -67,7 +67,7 @@ const SelectField = ({
 			<select
 				name={name}
 				ref={ref}
-				className={`border-[1px] rounded-[4px] w-full h-[56px] pl-[11px] pr-[45px] appearance-none outline-none bg-transparent relative z-10 focus:border-[2px] focus:px-[10px] disabled:opacity-100 disabled:z-0 disabled:border-slate-400 disabled:bg-slate-100 disabled:text-slate-400 ${
+				className={`border-[1px] rounded-[4px] w-full h-[56px] pl-[15px] pr-[51px] appearance-none outline-none bg-transparent relative z-10 focus:border-[2px] focus:pl-[14px] focus:pr-[50px] disabled:opacity-100 disabled:z-0 disabled:border-slate-400 disabled:bg-slate-100 disabled:text-slate-400 ${
 					isError ? "border-red-700" : "border-slate-950 focus:border-sky-500"
 				}`}
 				disabled={disabled}
