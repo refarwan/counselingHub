@@ -23,7 +23,6 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { BsPuzzleFill } from "react-icons/bs";
 import {
-	FaAddressCard,
 	FaBars,
 	FaCircleUser,
 	FaKey,
