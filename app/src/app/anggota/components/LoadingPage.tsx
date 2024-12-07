@@ -7,7 +7,7 @@ const LoadingPage = () => {
 		<TemplateMain className="grid place-content-center">
 			<div className="text-sky-500 flex flex-col items-center">
 				<BsPuzzleFill size={80} />
-				<span className="text-[50px]">
+				<span className="text-[40px] sm:text-[50px]">
 					counseling<span className="font-bold">Hub</span>
 				</span>
 			</div>
