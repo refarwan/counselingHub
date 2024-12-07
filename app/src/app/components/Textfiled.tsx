@@ -51,7 +51,7 @@ const TextField = ({
 			{label ? (
 				<div
 					className={`h-[24px] absolute transition-[font-size,_left,_top,_padding] ${
-						isActive ? "z-20" : "z-0"
+						isActive || currentValue ? "z-20" : "z-0"
 					}${clsx({
 						" bg-slate-100 text-slate-400": disabled,
 						" bg-white": !disabled,
