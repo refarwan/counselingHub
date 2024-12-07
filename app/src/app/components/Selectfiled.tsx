@@ -47,14 +47,14 @@ const SelectField = ({
 		>
 			{label ? (
 				<div
-					className={`h-[24px] absolute transition-[font-size,_left,_top,_padding] z-20${clsx(
-						{
-							" bg-slate-100 text-slate-400": disabled,
-							" bg-white": !disabled,
-							" text-red-700": !disabled && isError,
-							" text-sky-500": !disabled && !isError && isActive,
-						}
-					)} ${
+					className={`h-[24px] absolute transition-[font-size,_left,_top,_padding] ${
+						isActive ? "z-20" : "z-0"
+					}${clsx({
+						" bg-slate-100 text-slate-400": disabled,
+						" bg-white": !disabled,
+						" text-red-700": !disabled && isError,
+						" text-sky-500": !disabled && !isError && isActive,
+					})} ${
 						isActive || currentValue
 							? "text-[12px] px-[4px] top-0 left-[12px] h-[16px]"
 							: "top-[24px] left-[16px]"
