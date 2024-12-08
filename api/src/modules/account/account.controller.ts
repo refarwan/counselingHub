@@ -4,6 +4,7 @@ import { RegisterDto } from "./dto/register.dto";
 import AccountData from "./types/account-data";
 
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { AllProvince } from "./types/all-province";
 
 @Controller("account")
 export class AccountController {
@@ -18,5 +19,11 @@ export class AccountController {
 	@UseGuards(AuthGuard)
 	async getMyProfile(@Req() request: Request): Promise<AccountData> {
 		return await this.accountService.getAccoutData(request["accountId"]);
+	}
+
+	@Get("all-province")
+	@UseGuards(AuthGuard)
+	async getAllProvince(): Promise<AllProvince> {
+		return await this.accountService.getAllProvince();
 	}
 }

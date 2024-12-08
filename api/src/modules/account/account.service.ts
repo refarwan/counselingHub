@@ -16,6 +16,7 @@ import { hashSync } from "bcrypt";
 import { randomBytes } from "crypto";
 import { DateTime } from "luxon";
 import AccountData from "./types/account-data";
+import { AllProvince } from "./types/all-province";
 
 @Injectable()
 export class AccountService {
@@ -126,5 +127,22 @@ export class AccountService {
 			education: accountData.education,
 			profession: accountData.profession,
 		};
+	}
+
+	async getAllProvince(): Promise<AllProvince> {
+		const allProvince = await this.prismaService.province.findMany({
+			select: {
+				id: true,
+				name: true,
+				Regency: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+			},
+		});
+
+		return allProvince;
 	}
 }
