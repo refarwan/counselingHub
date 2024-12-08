@@ -77,7 +77,7 @@ const Page = () => {
 			.catch((error: AxiosError) => {
 				axiosErrorHandling({ error });
 			});
-	}, []);
+	}, [axiosErrorHandling]);
 
 	const selectProvince = useCallback(
 		(id: number) => {
