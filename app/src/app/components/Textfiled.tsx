@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentType, RefObject, useEffect, useState } from "react";
+import { ChangeEventHandler, ComponentType, RefObject, useState } from "react";
 
 import { FaExclamationCircle } from "react-icons/fa";
 import clsx from "clsx";
@@ -16,7 +16,7 @@ type Props = {
 	LeadingIcon?: ComponentType<{ className?: string; size?: number }>;
 	disabled?: boolean;
 	isError?: boolean;
-	onChange?: () => void;
+	onChange?: ChangeEventHandler<HTMLInputElement>;
 	className?: string;
 };
 
@@ -24,7 +24,7 @@ const TextField = ({
 	ref,
 	type = "text",
 	name,
-	value = "",
+	value,
 	placeholder,
 	label,
 	supporting,
@@ -34,31 +34,47 @@ const TextField = ({
 	onChange,
 	className,
 }: Props) => {
-	const [isActive, setIsActive] = useState<boolean>(false);
-	const [currentValue, setCurrentValue] = useState<string | undefined>(
-		undefined
-	);
-
-	useEffect(() => {
-		if (value && ref && ref.current) ref.current.value = value;
-		setCurrentValue(value);
-	}, [value, ref]);
+	const [isFocus, setIsFocus] = useState<boolean>(false);
+	const [isIsset, setIsIsset] = useState<boolean>(value ? true : false);
 
 	return (
 		<div
 			className={`${className} min-h-[64px] flex flex-col gap-[4px] pt-[8px] relative`}
 		>
+			<input
+				type={type}
+				name={name}
+				ref={ref}
+				placeholder={isFocus ? placeholder : undefined}
+				value={value}
+				className={`border-[1px] rounded-[4px] w-full h-[56px] ${
+					isIsset ? "z-0" : "z-10"
+				} transition-[z-index] ${
+					LeadingIcon
+						? "pl-[51px] focus:pl-[50px]"
+						: "pl-[15px] focus:pl-[14px]"
+				} pr-[15px] outline-none bg-transparent relative focus:border-[2px] delay-150 focus:delay-0 focus:z-0 disabled:opacity-100 disabled:border-slate-400 disabled:bg-slate-100 disabled:text-slate-400 ${
+					isError ? "border-red-700" : "border-slate-950 focus:border-sky-500"
+				}`}
+				onChange={onChange}
+				onFocus={() => setIsFocus(true)}
+				onBlur={(event) => {
+					setIsIsset(event.target.value ? true : false);
+					setIsFocus(false);
+				}}
+				disabled={disabled}
+			/>
 			{label ? (
 				<div
-					className={`h-[24px] absolute transition-[font-size,_left,_top,_padding] ${
-						isActive || currentValue ? "z-20" : "z-0"
-					}${clsx({
-						" bg-slate-100 text-slate-400": disabled,
-						" bg-white": !disabled,
-						" text-red-700": !disabled && isError,
-						" text-sky-500": !disabled && !isError && isActive,
-					})} ${
-						isActive || currentValue
+					className={`h-[24px] absolute transition-[font-size,_left,_top,_padding] ${clsx(
+						{
+							" bg-slate-100 text-slate-400": disabled,
+							" bg-white": !disabled,
+							" text-red-700": !disabled && isError,
+							" text-sky-500": !disabled && !isError && isFocus,
+						}
+					)} ${
+						isFocus || isIsset
 							? "text-[12px] px-[4px] top-0 left-[12px] h-[16px]"
 							: `top-[24px] ${LeadingIcon ? "left-[52px]" : "left-[16px]"}`
 					}`}
@@ -66,32 +82,12 @@ const TextField = ({
 					{label}
 				</div>
 			) : null}
-			<input
-				type={type}
-				name={name}
-				ref={ref}
-				placeholder={placeholder}
-				className={`border-[1px] rounded-[4px] w-full h-[56px] ${
-					LeadingIcon
-						? "pl-[51px] focus:pl-[50px]"
-						: "pl-[15px] focus:pl-[14px]"
-				} pr-[15px] appearance-none outline-none bg-transparent relative z-10 focus:border-[2px] disabled:opacity-100 disabled:z-0 disabled:border-slate-400 disabled:bg-slate-100 disabled:text-slate-400 ${
-					isError ? "border-red-700" : "border-slate-950 focus:border-sky-500"
-				}`}
-				disabled={disabled}
-				onFocus={() => setIsActive(true)}
-				onBlur={() => setIsActive(false)}
-				onChange={(event) => {
-					setCurrentValue(event.target.value);
-					if (onChange) onChange();
-				}}
-			/>
 			{LeadingIcon ? (
 				<LeadingIcon
 					size={24}
 					className={`absolute left-[12px] top-[24px] ${clsx({
 						"fill-red-700": isError,
-						"fill-sky-500": isActive && !isError,
+						"fill-sky-500": isFocus && !isError,
 						"fill-slate-400": disabled,
 					})}`}
 				/>

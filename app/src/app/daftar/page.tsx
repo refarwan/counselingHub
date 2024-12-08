@@ -122,9 +122,11 @@ const Page = () => {
 						name="fullname"
 						label="Nama lengkap"
 						isError={errorInput.fullname?.length ? true : false}
-						setStateAction={setFullname}
 						supporting={errorInput.fullname}
-						onChange={() => deleteErrorInput("fullname")}
+						onChange={(event) => {
+							deleteErrorInput("fullname");
+							setFullname(event.target.value);
+						}}
 						value={fullname}
 						disabled={isProcessing}
 					/>
@@ -133,9 +135,11 @@ const Page = () => {
 						name="email"
 						label="Email"
 						isError={errorInput.email?.length ? true : false}
-						setStateAction={setEmail}
 						supporting={errorInput.email}
-						onChange={() => deleteErrorInput("email")}
+						onChange={(event) => {
+							deleteErrorInput("email");
+							setEmail(event.target.value);
+						}}
 						value={email}
 						disabled={isProcessing}
 					/>
@@ -144,9 +148,11 @@ const Page = () => {
 						name="password"
 						label="Sandi"
 						isError={errorInput.password?.length ? true : false}
-						setStateAction={setPassword}
 						supporting={errorInput.password}
-						onChange={() => deleteErrorInput("password")}
+						onChange={(event) => {
+							deleteErrorInput("password");
+							setPassword(event.target.value);
+						}}
 						value={password}
 						disabled={isProcessing}
 					/>
@@ -155,9 +161,11 @@ const Page = () => {
 						name="confirmPassword"
 						label="Konfirmasi"
 						isError={errorInput.confirmPassword?.length ? true : false}
-						setStateAction={setconfirmPassword}
 						supporting={errorInput.confirmPassword}
-						onChange={() => deleteErrorInput("confirmPassword")}
+						onChange={(event) => {
+							deleteErrorInput("confirmPassword");
+							setconfirmPassword(event.target.value);
+						}}
 						value={confirmPassword}
 						disabled={isProcessing}
 					/>

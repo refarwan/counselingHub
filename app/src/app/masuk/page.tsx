@@ -45,8 +45,6 @@ const Page = () => {
 			if (!username) inputErrors.username = ["Username tidak boleh kosong"];
 			if (!password) inputErrors.password = ["Password tidak boleh kosong"];
 
-			console.log(inputErrors);
-
 			if (Object.keys(inputErrors).length)
 				return setErrorInputState(inputErrors);
 
@@ -100,9 +98,9 @@ const Page = () => {
 						type="text"
 						name="username"
 						label="Username / email / nomor telepon"
-						setStateAction={setUsername}
-						onChange={() => {
+						onChange={(event) => {
 							deleteErrorInput("username");
+							setUsername(event.target.value);
 						}}
 						isError={errorInputState.username ? true : false}
 						supporting={errorInputState.username}
@@ -111,9 +109,9 @@ const Page = () => {
 						type="password"
 						name="password"
 						label="Kata sandi"
-						setStateAction={setPassword}
-						onChange={() => {
+						onChange={(event) => {
 							deleteErrorInput("password");
+							setPassword(event.target.value);
 						}}
 						isError={errorInputState.password ? true : false}
 						supporting={errorInputState.password}
