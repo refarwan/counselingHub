@@ -1,12 +1,11 @@
 "use client";
 
-import { ChangeEventHandler, ComponentType, RefObject, useState } from "react";
+import { ChangeEventHandler, ComponentType, useEffect, useState } from "react";
 
 import { FaExclamationCircle } from "react-icons/fa";
 import clsx from "clsx";
 
 type Props = {
-	ref?: RefObject<HTMLInputElement>;
 	type?: string;
 	name?: string;
 	value?: string;
@@ -18,10 +17,11 @@ type Props = {
 	isError?: boolean;
 	onChange?: ChangeEventHandler<HTMLInputElement>;
 	className?: string;
+	minLength?: number;
+	maxLength?: number;
 };
 
 const TextField = ({
-	ref,
 	type = "text",
 	name,
 	value,
@@ -33,9 +33,15 @@ const TextField = ({
 	isError = false,
 	onChange,
 	className,
+	minLength,
+	maxLength,
 }: Props) => {
 	const [isFocus, setIsFocus] = useState<boolean>(false);
-	const [isIsset, setIsIsset] = useState<boolean>(value ? true : false);
+	const [isIsset, setIsIsset] = useState<boolean>(false);
+
+	useEffect(() => {
+		setIsIsset(value ? true : false);
+	}, [value]);
 
 	return (
 		<div
@@ -44,9 +50,10 @@ const TextField = ({
 			<input
 				type={type}
 				name={name}
-				ref={ref}
 				placeholder={isFocus ? placeholder : undefined}
 				value={value}
+				minLength={minLength}
+				maxLength={maxLength}
 				className={`border-[1px] rounded-[4px] w-full h-[56px] ${
 					isIsset ? "z-0" : "z-10"
 				} transition-[z-index] ${

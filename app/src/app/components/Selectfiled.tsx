@@ -1,16 +1,15 @@
 "use client";
 
-import { ChangeEvent, ChangeEventHandler, RefObject, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 
 import { FaExclamationCircle } from "react-icons/fa";
 import clsx from "clsx";
 import { FaCaretDown } from "react-icons/fa6";
 
 type Props = {
-	ref?: RefObject<HTMLSelectElement>;
 	name?: string;
-	options: { value: string; text: string }[];
-	value?: string;
+	options: { value: string | number; text: string }[];
+	value?: string | number;
 	label?: string;
 	supporting?: string | string[];
 	disabled?: boolean;
@@ -20,7 +19,6 @@ type Props = {
 };
 
 const SelectField = ({
-	ref,
 	name,
 	options,
 	value,
@@ -34,9 +32,9 @@ const SelectField = ({
 	const [isFocus, setIsFocus] = useState<boolean>(false);
 	const [isIsset, setIsIsset] = useState<boolean>(value ? true : false);
 
-	const initialChangeEvent = (event: ChangeEvent<HTMLSelectElement>) => {
-		setIsIsset(event.target.value ? true : false);
-	};
+	useEffect(() => {
+		setIsIsset(value ? true : false);
+	}, [value]);
 
 	return (
 		<div
@@ -44,7 +42,6 @@ const SelectField = ({
 		>
 			<select
 				name={name}
-				ref={ref}
 				value={value}
 				className={`border-[1px] rounded-[4px] w-full h-[56px] ${
 					isIsset ? "z-0" : "z-10"
@@ -57,7 +54,7 @@ const SelectField = ({
 					setIsFocus(false);
 					setIsIsset(event.target.value ? true : false);
 				}}
-				onChange={onChange && initialChangeEvent}
+				onChange={onChange}
 			>
 				<option className="hidden"></option>
 				{options.map((item, index) => (
