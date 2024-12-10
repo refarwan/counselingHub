@@ -16,6 +16,7 @@ import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 import { compareSync } from "bcrypt";
 import { DateTime } from "luxon";
+import { Role } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -163,15 +164,23 @@ export class AuthService {
 		return { status: "success", message: accessToken };
 	}
 
-	async logout(refreshToken: undefined | string): Promise<void> {
+	async logout(
+		refreshToken: undefined | string,
+		accessToken: undefined | string,
+	): Promise<void> {
 		if (!refreshToken)
 			throw new UnauthorizedException({
 				message: "Refresh token tidak ditemukan",
 			});
 
+		interface DecodedToken {
+			username: string;
+			iat: number;
+			exp: number;
+		}
+
 		try {
-			type DecodedType = { username: string; iat: number; exp: number };
-			const data: DecodedType = this.jwtService.decode(refreshToken);
+			const data: DecodedToken = this.jwtService.decode(refreshToken);
 
 			const ttl = DateTime.fromSeconds(data.exp).diff(
 				DateTime.now(),
@@ -182,6 +191,26 @@ export class AuthService {
 				true,
 				ttl,
 			);
+		} catch {}
+
+		try {
+			interface DecodedAccessToken extends DecodedToken {
+				profilePicture: null | string;
+				fullname: string;
+				role: Role;
+			}
+			const data: DecodedAccessToken = this.jwtService.decode(accessToken);
+
+			const ttl = DateTime.fromSeconds(data.exp).diff(
+				DateTime.now(),
+			).milliseconds;
+
+			if (ttl > 0)
+				await this.cacheManager.set(
+					`blacklistedAccessToken:${accessToken}`,
+					true,
+					ttl,
+				);
 		} catch {}
 	}
 }

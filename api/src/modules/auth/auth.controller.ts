@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
 
@@ -15,6 +14,8 @@ import {
 	Res,
 	UnauthorizedException,
 } from "@nestjs/common";
+
+import { Request, Response } from "express";
 
 @Controller("auth")
 export class AuthController {
@@ -67,8 +68,14 @@ export class AuthController {
 		@Req() request: Request,
 		@Res({ passthrough: true }) response: Response,
 	) {
+		let accessToken = undefined;
+		const authorization = request.headers["authorization"];
+		if (authorization && authorization.startsWith("Bearer ")) {
+			const token = authorization.split(" ")[1];
+			accessToken = token;
+		}
 		const refreshToken = request.cookies["refreshToken"] as undefined | string;
-		await this.authService.logout(refreshToken);
+		await this.authService.logout(refreshToken, accessToken);
 		response.clearCookie("refreshToken");
 		return { message: "Berhasil mengeluarkan akun" };
 	}
