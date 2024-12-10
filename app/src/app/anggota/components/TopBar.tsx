@@ -2,7 +2,7 @@
 
 import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
 import { useLoadingBar } from "@/app/components/LoadingBar";
-import { axiosInstance } from "@/utils/axios-intance";
+import { axiosInstanceWithToken } from "@/utils/axios-intance";
 import { deleteAccessToken } from "@/utils/server-auth";
 import AccountRole from "@/utils/types/account-role";
 
@@ -60,12 +60,14 @@ const TopAppBarProvider = ({
 		async (event: MouseEvent) => {
 			event.preventDefault();
 			loadingBarStart();
-			await axiosInstance
+			await axiosInstanceWithToken
 				.delete("auth/logout")
+				.then(() => {
+					deleteAccessToken();
+					router.push("/masuk");
+				})
 				.catch((error: AxiosError) => axiosErrorHandling({ error }));
-			deleteAccessToken();
 			loadingBarStop();
-			router.push("/masuk");
 		},
 		[axiosErrorHandling, loadingBarStart, loadingBarStop, router]
 	);
