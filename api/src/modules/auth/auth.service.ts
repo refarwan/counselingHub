@@ -55,7 +55,7 @@ export class AuthService {
 		return accountData;
 	}
 
-	private async createAccessToken(username: string): Promise<null | string> {
+	async createAccessToken(username: string): Promise<null | string> {
 		const cacheAccountData = await this.getCacheAccountData(username);
 		if (!cacheAccountData) return null;
 		return this.jwtService.sign(
