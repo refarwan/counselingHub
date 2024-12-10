@@ -1,4 +1,6 @@
 import { AuthService } from "./auth.service";
+import { AuthGuard } from "src/guards/auth.guard";
+
 import { LoginDto } from "./dto/login.dto";
 
 import {
@@ -13,6 +15,7 @@ import {
 	Req,
 	Res,
 	UnauthorizedException,
+	UseGuards,
 } from "@nestjs/common";
 
 import { Request, Response } from "express";
@@ -64,6 +67,7 @@ export class AuthController {
 	}
 
 	@Delete("logout")
+	@UseGuards(AuthGuard)
 	async logout(
 		@Req() request: Request,
 		@Res({ passthrough: true }) response: Response,
