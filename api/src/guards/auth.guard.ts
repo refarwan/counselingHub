@@ -4,19 +4,22 @@ import {
 	CanActivate,
 	ExecutionContext,
 	ForbiddenException,
+	Inject,
 	Injectable,
 	UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { Role } from "@prisma/client";
+import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 import { Request } from "express";
-import { Role } from "@prisma/client";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 	constructor(
 		private jwtService: JwtService,
 		private authService: AuthService,
+		@Inject(CACHE_MANAGER) private cacheManager: Cache,
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,6 +28,15 @@ export class AuthGuard implements CanActivate {
 		if (!token) {
 			throw new UnauthorizedException({ message: "Access token diperlukan" });
 		}
+
+		const blacklistedAccessToken = await this.cacheManager.get(
+			`blacklistedAccessToken:${token}`,
+		);
+
+		if (blacklistedAccessToken)
+			throw new ForbiddenException({
+				message: "Access token tidak berlaku lagi",
+			});
 
 		type Payload = {
 			username: string;
