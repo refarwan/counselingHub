@@ -48,7 +48,13 @@ export class AuthService {
 		const accountData: CacheAccountDataType = {
 			id: account.id,
 			fullname: account.fullname,
-			profilePicture: account.profilePicture,
+			profilePicture: account.profilePicture
+				? {
+						small: `${process.env.APP_ORIGIN}/profile-picture/small/${account.profilePicture}`,
+						medium: `${process.env.APP_ORIGIN}/profile-picture/medium/${account.profilePicture}`,
+						large: `${process.env.APP_ORIGIN}/profile-picture/large/${account.profilePicture}`,
+					}
+				: null,
 			role: account.role,
 		};
 

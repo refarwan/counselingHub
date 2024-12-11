@@ -297,7 +297,13 @@ export class AccountService {
 			const accountData: CacheAccountDataType = {
 				id: accountId,
 				fullname: newValue.fullname,
-				profilePicture: profilePicture,
+				profilePicture: profilePicture
+					? {
+							small: `${process.env.APP_ORIGIN}/profile-picture/small/${profilePicture}`,
+							medium: `${process.env.APP_ORIGIN}/profile-picture/medium/${profilePicture}`,
+							large: `${process.env.APP_ORIGIN}/profile-picture/large/${profilePicture}`,
+						}
+					: null,
 				role: currentAccountData.role,
 			};
 
@@ -328,7 +334,13 @@ export class AccountService {
 			const accountData: CacheAccountDataType = {
 				id: accountId,
 				fullname: newValue.fullname,
-				profilePicture: profilePicture,
+				profilePicture: profilePicture
+					? {
+							small: `${process.env.APP_ORIGIN}/profile-picture/small/${profilePicture}`,
+							medium: `${process.env.APP_ORIGIN}/profile-picture/medium/${profilePicture}`,
+							large: `${process.env.APP_ORIGIN}/profile-picture/large/${profilePicture}`,
+						}
+					: null,
 				role: currentAccountData.role,
 			};
 
