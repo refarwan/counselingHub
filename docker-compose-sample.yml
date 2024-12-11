@@ -32,6 +32,7 @@ services:
       - ACCESS_TOKEN_SECRET="jwt-access-token-key"
       - REFRESH_TOKEN_SECRET="jwt-refresh-token-key"
       - IS_HTTPS=true
+      - APP_ORIGIN=https://www.api-counselinghub.com
 
     depends_on:
       - counselinghub-postgres
