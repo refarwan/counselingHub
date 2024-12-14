@@ -114,9 +114,9 @@ export class AccountService {
 		return {
 			profilePicture: accountData.profilePicture
 				? {
-						small: `${process.env.APP_ORIGIN}profile-picture/small/${accountData.profilePicture}`,
-						medium: `${process.env.APP_ORIGIN}profile-picture/medium/${accountData.profilePicture}`,
-						large: `${process.env.APP_ORIGIN}profile-picture/large/${accountData.profilePicture}`,
+						small: `${process.env.APP_ORIGIN}/profile-picture/small/${accountData.profilePicture}`,
+						medium: `${process.env.APP_ORIGIN}/profile-picture/medium/${accountData.profilePicture}`,
+						large: `${process.env.APP_ORIGIN}/profile-picture/large/${accountData.profilePicture}`,
 					}
 				: null,
 			username: accountData.username,
