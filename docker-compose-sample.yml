@@ -5,7 +5,7 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=counselinghub2024
+      - POSTGRES_PASSWORD=CounselingHub2024
       - POSTGRES_DB=counselinghub
       - POSTGRES_USER=counselinghub-user
 
@@ -16,14 +16,19 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
 
   counselinghub-api:
     build:
-      context: ./api
       dockerfile: Dockerfile
+    volumes:
+      - ./user-files:/app/user-files
+      - ./user-files/profile-picture:/app/user-files/profile-picture
+      - ./user-files/profile-picture/large:/app/user-files/profile-picture/large
+      - ./user-files/profile-picture/medium:/app/user-files/profile-picture/medium
+      - ./user-files/profile-picture/small:/app/user-files/profile-picture/small
     environment:
-      - DATABASE_URL=postgresql://counselinghub-user:counselinghub2024@counselinghub-postgres:5432/counselinghub?schema=public
+      - DATABASE_URL=postgresql://counselinghub-user:CounselingHub2024@counselinghub-postgres:5432/counselinghub?schema=public
       - ALLOWED_ORIGIN=["https://www.counselinghub.com","https://counselinghub.com"]
       - REDIS_HOST=counselinghub-redis
       - REDIS_PORT=6379
@@ -42,19 +47,3 @@ services:
     ports:
       - 9000:9000
     command: sh -c "npx prisma migrate deploy; npx prisma db seed; npm start"
-
-  counselinghub-app:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-      args:
-        - API_ORIGIN=https://www.counselinghub-api.com
-        - IS_HTTPS=true
-    environment:
-      - ALLOWED_ORIGINS=["*counselinghub-app.com"]
-    depends_on:
-      - counselinghub-api
-    image: counselinghub-app:1.0.0-beta
-    container_name: counselinghub-app
-    ports:
-      - 3000:3000
