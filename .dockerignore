@@ -1,0 +1,13 @@
+/dist
+/node_modules
+/user-files
+user-files/
+
+.env*
+.gitignore
+.prettierrc
+docker-compose-sample.yml
+docker-compose.yml
+env.d.ts
+redis-sample.conf
+redis.con

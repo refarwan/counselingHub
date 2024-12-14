@@ -6,6 +6,7 @@
 	"private": true,
 	"license": "UNLICENSED",
 	"scripts": {
+		"prebuild": "mkdir -p user-files user-files/profile-picture user-files/profile-picture/small user-files/profile-picture/medium user-files/profile-picture/large",
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"start": "nest start",
