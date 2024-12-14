@@ -2,10 +2,9 @@ import { PrismaService } from "src/prisma.service";
 
 import { LoginDto } from "./dto/login.dto";
 
-import { CacheAccountDataType } from "../types/cache-account-data";
+import { CacheAccountDataType } from "../account/types/cache-account-data";
 
 import {
-	BadRequestException,
 	Inject,
 	Injectable,
 	NotFoundException,
@@ -16,7 +15,6 @@ import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 import { compareSync } from "bcrypt";
 import { DateTime } from "luxon";
-import { Role } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -62,7 +60,7 @@ export class AuthService {
 		return accountData;
 	}
 
-	async createAccessToken(username: string): Promise<null | string> {
+	private async createAccessToken(username: string): Promise<string> {
 		const cacheAccountData = await this.getCacheAccountData(username);
 		if (!cacheAccountData) return null;
 		return this.jwtService.sign(
@@ -74,12 +72,12 @@ export class AuthService {
 			},
 			{
 				secret: process.env.ACCESS_TOKEN_SECRET,
-				expiresIn: "10m",
+				expiresIn: "5m",
 			},
 		);
 	}
 
-	private createRefreshToken(username: string) {
+	private createRefreshToken(username: string): Promise<string> {
 		return this.jwtService.signAsync(
 			{
 				username,
@@ -122,9 +120,6 @@ export class AuthService {
 			});
 
 		const accessToken = await this.createAccessToken(accountData.username);
-		if (!accessToken)
-			throw new BadRequestException({ message: "Gagal membuat access token" });
-
 		const refreshToken = await this.createRefreshToken(accountData.username);
 
 		const { exp } = this.jwtService.decode(refreshToken);
@@ -133,47 +128,29 @@ export class AuthService {
 		return { accessToken, refreshToken, expires };
 	}
 
-	async getNewAccessToken(refreshToken: string): Promise<{
-		status: "success" | "forbidden" | "serverError";
-		message: string;
-	}> {
+	async getNewAccessToken(
+		refreshToken: string,
+	): Promise<{ success: false } | { success: true; accessToken: string }> {
 		const blacklistedRefreshToken = await this.cacheManager.get(
 			`blacklistedRefreshToken:${refreshToken}`,
 		);
-		if (blacklistedRefreshToken)
-			return {
-				status: "forbidden",
-				message: "Refresh token tidak berlaku lagi",
-			};
+		if (blacklistedRefreshToken) return { success: false };
 
-		let username: null | string = null;
-		try {
-			const payload: { username: string; iat: number; exp: number } =
-				this.jwtService.verify(refreshToken, {
+		const payload: { username: string; iat: number; exp: number } | null =
+			await this.jwtService
+				.verifyAsync(refreshToken, {
 					secret: process.env.REFRESH_TOKEN_SECRET,
-				});
-			username = payload.username;
-		} catch {
-			return {
-				status: "forbidden",
-				message: "Refresh token tidak dapat diverifikasi",
-			};
-		}
+				})
+				.then((result) => result)
+				.catch(() => null);
 
-		const accessToken = await this.createAccessToken(username);
-		if (!accessToken)
-			return {
-				status: "serverError",
-				message: "Server gagal memperbarui token",
-			};
+		if (!payload) return { success: false };
 
-		return { status: "success", message: accessToken };
+		const accessToken = await this.createAccessToken(payload.username);
+		return { success: true, accessToken };
 	}
 
-	async logout(
-		refreshToken: undefined | string,
-		accessToken: undefined | string,
-	): Promise<void> {
+	async logout(refreshToken: undefined | string): Promise<void> {
 		if (!refreshToken)
 			throw new UnauthorizedException({
 				message: "Refresh token tidak ditemukan",
@@ -185,38 +162,38 @@ export class AuthService {
 			exp: number;
 		}
 
-		try {
-			const data: DecodedToken = this.jwtService.decode(refreshToken);
+		// try {
+		const data: DecodedToken = this.jwtService.decode(refreshToken);
 
-			const ttl = DateTime.fromSeconds(data.exp).diff(
-				DateTime.now(),
-			).milliseconds;
+		const ttl = DateTime.fromSeconds(data.exp).diff(
+			DateTime.now(),
+		).milliseconds;
 
-			await this.cacheManager.set(
-				`blacklistedRefreshToken:${refreshToken}`,
-				true,
-				ttl,
-			);
-		} catch {}
+		await this.cacheManager.set(
+			`blacklistedRefreshToken:${refreshToken}`,
+			true,
+			ttl,
+		);
+		// } catch {}
 
-		try {
-			interface DecodedAccessToken extends DecodedToken {
-				profilePicture: null | string;
-				fullname: string;
-				role: Role;
-			}
-			const data: DecodedAccessToken = this.jwtService.decode(accessToken);
+		// try {
+		// 	interface DecodedAccessToken extends DecodedToken {
+		// 		profilePicture: null | string;
+		// 		fullname: string;
+		// 		role: Role;
+		// 	}
+		// 	const data: DecodedAccessToken = this.jwtService.decode(accessToken);
 
-			const ttl = DateTime.fromSeconds(data.exp).diff(
-				DateTime.now(),
-			).milliseconds;
+		// 	const ttl = DateTime.fromSeconds(data.exp).diff(
+		// 		DateTime.now(),
+		// 	).milliseconds;
 
-			if (ttl > 0)
-				await this.cacheManager.set(
-					`blacklistedAccessToken:${accessToken}`,
-					true,
-					ttl,
-				);
-		} catch {}
+		// 	if (ttl > 0)
+		// 		await this.cacheManager.set(
+		// 			`blacklistedAccessToken:${accessToken}`,
+		// 			true,
+		// 			ttl,
+		// 		);
+		// } catch {}
 	}
 }

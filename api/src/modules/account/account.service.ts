@@ -2,13 +2,10 @@ import * as path from "path";
 import { writeFileSync, unlinkSync, existsSync } from "fs";
 
 import { PrismaService } from "src/prisma.service";
-import { AuthService } from "../auth/auth.service";
-import { JwtService } from "@nestjs/jwt";
 
-import { CacheAccountDataType } from "../types/cache-account-data";
+import { CacheAccountDataType } from "./types/cache-account-data";
 import AccountData from "./types/account-data";
 import { AllProvince } from "./types/all-province";
-import { EditAccountResponse } from "./types/edit-account-response";
 
 import { RegisterDto } from "./dto/register.dto";
 import { EditAccountDto } from "./dto/edit-account.dto";
@@ -27,25 +24,14 @@ import { hashSync } from "bcrypt";
 import { randomBytes } from "crypto";
 import { DateTime } from "luxon";
 import * as sharp from "sharp";
+import { Gender } from "@prisma/client";
 
 @Injectable()
 export class AccountService {
 	constructor(
 		private prismaService: PrismaService,
 		@Inject(CACHE_MANAGER) private cacheManager: Cache,
-		private authService: AuthService,
-		private jwtService: JwtService,
 	) {}
-
-	private async availabilityEmailCheck(email: string): Promise<boolean> {
-		const accountCount = await this.prismaService.account.count({
-			where: {
-				email,
-			},
-		});
-
-		return !accountCount ? true : false;
-	}
 
 	async register(data: RegisterDto): Promise<{ message: string }> {
 		if (data.password !== data.confirmPassword)
@@ -53,16 +39,18 @@ export class AccountService {
 				message: { confirmPassword: ["Konfirmasi password tidak sama"] },
 			});
 
-		type ErrorParams = {
-			email?: string[];
-		};
-		const errorParams: ErrorParams = {};
+		const emailCount = await this.prismaService.account.count({
+			where: {
+				email: data.email,
+			},
+		});
 
-		if (!(await this.availabilityEmailCheck(data.email)))
-			errorParams.email = ["email tidak tersedia"];
-
-		if (Object.keys(errorParams).length)
-			throw new ConflictException({ message: errorParams });
+		if (emailCount)
+			throw new ConflictException({
+				message: {
+					email: ["email tidak tersedia"],
+				},
+			});
 
 		const account = await this.prismaService.account.create({
 			data: {
@@ -90,7 +78,7 @@ export class AccountService {
 		return { message: "Berhasil membuat akun" };
 	}
 
-	async getAccoutData(id: number): Promise<AccountData> {
+	async getMyProfile(id: number): Promise<AccountData> {
 		const accountData = await this.prismaService.account.findFirst({
 			select: {
 				profilePicture: true,
@@ -124,7 +112,13 @@ export class AccountService {
 		if (!accountData)
 			throw new NotFoundException({ message: "Akun tidak ditemukan" });
 		return {
-			profilePicture: null,
+			profilePicture: accountData.profilePicture
+				? {
+						small: `${process.env.APP_ORIGIN}profile-picture/small/${accountData.profilePicture}`,
+						medium: `${process.env.APP_ORIGIN}profile-picture/medium/${accountData.profilePicture}`,
+						large: `${process.env.APP_ORIGIN}profile-picture/large/${accountData.profilePicture}`,
+					}
+				: null,
 			username: accountData.username,
 			email: accountData.email,
 			phoneNumber: accountData.phoneNumber,
@@ -134,7 +128,9 @@ export class AccountService {
 				: null,
 			gender: accountData.gender,
 			address: accountData.address,
-			regency: accountData.Regency,
+			regency: accountData.Regency
+				? { name: accountData.Regency.name, id: accountData.Regency.id }
+				: null,
 			province: accountData.Regency ? accountData.Regency.Province : null,
 			education: accountData.education,
 			profession: accountData.profession,
@@ -160,72 +156,111 @@ export class AccountService {
 
 	async editMyAccount({
 		accountId,
-		newValue,
+		data,
 		files,
-		refreshToken,
 	}: {
 		accountId: number;
-		newValue: EditAccountDto;
+		data: EditAccountDto;
 		files?: { profilePicture?: Express.Multer.File[] };
-		refreshToken: undefined | string;
-	}): Promise<EditAccountResponse> {
-		if (!files && !Object.keys(newValue).length)
-			throw new BadRequestException({ message: "Tidak ada data yang dirubah" });
-
-		if (newValue.username) {
-			const usernameCount = await this.prismaService.account.count({
-				where: {
-					username: newValue.username,
-					id: {
-						not: accountId,
-					},
-				},
-			});
-
-			if (usernameCount)
-				throw new BadRequestException({ message: "Username tidak tersedia" });
-		}
-
-		if (newValue.email) {
-			const emailCount = await this.prismaService.account.count({
-				where: {
-					email: newValue.email,
-					id: {
-						not: accountId,
-					},
-				},
-			});
-
-			if (emailCount)
-				throw new BadRequestException({ message: "Email tidak tersedia" });
-		}
-
-		if (newValue.phoneNumber) {
-			const phoneNumberCount = await this.prismaService.account.count({
-				where: {
-					phoneNumber: newValue.phoneNumber,
-					id: {
-						not: accountId,
-					},
-				},
-			});
-
-			if (phoneNumberCount)
-				throw new BadRequestException({
-					message: "Nomor telepon tidak tersedia",
-				});
-		}
-
+	}): Promise<{ reAuthenticate: boolean }> {
 		const currentAccountData = await this.prismaService.account.findUnique({
 			select: {
-				profilePicture: true,
-				role: true,
 				username: true,
+				email: true,
+				phoneNumber: true,
+				role: true,
+				fullname: true,
+				birthday: true,
+				gender: true,
+				address: true,
+				regencyId: true,
+				education: true,
+				profession: true,
+				profilePicture: true,
 			},
 			where: {
 				id: accountId,
 			},
 		});
+
+		type DataEdit = {
+			username?: string;
+			email?: string;
+			phoneNumber?: string;
+			fullname?: string;
+			birthday?: string;
+			gender?: Gender;
+			address?: string;
+			regencyId?: number;
+			education?: string;
+			profession?: string;
+			profilePicture?: string;
+		};
+
+		const dataEdit: DataEdit = {};
+
+		if (data.username && data.username !== currentAccountData.username) {
+			const usernameCount = await this.prismaService.account.count({
+				where: { username: data.username },
+			});
+
+			if (usernameCount)
+				throw new BadRequestException({
+					message: { username: ["Username tidak tersedia"] },
+				});
+			dataEdit.username = data.username;
+		}
+
+		if (data.email && data.email !== currentAccountData.email) {
+			const emailCount = await this.prismaService.account.count({
+				where: { email: data.email },
+			});
+
+			if (emailCount)
+				throw new BadRequestException({
+					message: { email: ["Email tidak tersedia"] },
+				});
+
+			dataEdit.email = data.email;
+		}
+
+		if (
+			data.phoneNumber &&
+			data.phoneNumber !== currentAccountData.phoneNumber
+		) {
+			const phoneNumberCount = await this.prismaService.account.count({
+				where: { phoneNumber: data.phoneNumber },
+			});
+
+			if (phoneNumberCount)
+				throw new BadRequestException({
+					message: { phoneNumber: ["Nomor telepon tidak tersedia"] },
+				});
+
+			dataEdit.phoneNumber = data.phoneNumber;
+		}
+
+		if (data.fullname && data.fullname !== currentAccountData.fullname)
+			dataEdit.fullname = data.fullname;
+		if (
+			data.birthday &&
+			data.birthday !==
+				DateTime.fromJSDate(currentAccountData.birthday).toFormat("yyyy-mm-dd")
+		)
+			dataEdit.birthday = data.birthday;
+		if (data.gender && data.gender !== currentAccountData.gender)
+			dataEdit.gender = data.gender;
+		if (data.address && data.address !== currentAccountData.address)
+			dataEdit.address = data.address;
+		if (data.regencyId && data.regencyId !== currentAccountData.regencyId)
+			dataEdit.regencyId = data.regencyId;
+		if (data.education && data.education !== currentAccountData.education)
+			dataEdit.education = data.education;
+		if (data.profession && data.profession !== currentAccountData.profession)
+			dataEdit.profession = data.profession;
+
+		if (!files.profilePicture && !Object.keys(dataEdit).length)
+			throw new BadRequestException({ message: "Tidak ada data yang dirubah" });
 
 		let profilePicture: undefined | null | string = undefined;
 
@@ -277,10 +312,8 @@ export class AccountService {
 				if (existsSync(oldLarge)) unlinkSync(oldLarge);
 			}
 		}
-
-		let data = { ...newValue, profilePicture };
 		const editAccount = await this.prismaService.account.update({
-			data,
+			data: { ...dataEdit, profilePicture },
 			where: {
 				id: accountId,
 			},
@@ -291,12 +324,12 @@ export class AccountService {
 				message: "Server gagal mengedit akun",
 			});
 
-		if (newValue.username) {
+		if (dataEdit.username) {
 			this.cacheManager.del(`cacheAccountData:currentAccountData.username`);
 
 			const accountData: CacheAccountDataType = {
 				id: accountId,
-				fullname: newValue.fullname,
+				fullname: data.fullname,
 				profilePicture: profilePicture
 					? {
 							small: `${process.env.APP_ORIGIN}/profile-picture/small/${profilePicture}`,
@@ -308,32 +341,17 @@ export class AccountService {
 			};
 
 			await this.cacheManager.set(
-				`cacheAccountData:${newValue.username}`,
+				`cacheAccountData:${data.username}`,
 				accountData,
 			);
 
-			try {
-				type DecodedType = { username: string; iat: number; exp: number };
-				const data: DecodedType = this.jwtService.decode(refreshToken);
-
-				const ttl = DateTime.fromSeconds(data.exp).diff(
-					DateTime.now(),
-				).milliseconds;
-
-				await this.cacheManager.set(
-					`blacklistedRefreshToken:${refreshToken}`,
-					true,
-					ttl,
-				);
-			} catch {}
-
-			return { reAuthenticate: "all" };
+			return { reAuthenticate: true };
 		}
 
-		if (newValue.fullname || profilePicture) {
+		if (data.fullname || profilePicture) {
 			const accountData: CacheAccountDataType = {
 				id: accountId,
-				fullname: newValue.fullname,
+				fullname: data.fullname,
 				profilePicture: profilePicture
 					? {
 							small: `${process.env.APP_ORIGIN}/profile-picture/small/${profilePicture}`,
@@ -348,12 +366,6 @@ export class AccountService {
 				`cacheAccountData:${currentAccountData.username}`,
 				accountData,
 			);
-
-			const accessToken = await this.authService.createAccessToken(
-				currentAccountData.username,
-			);
-
-			return { reAuthenticate: "accessToken", accessToken };
 		}
 		return { reAuthenticate: false };
 	}

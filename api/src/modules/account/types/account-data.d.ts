@@ -1,7 +1,11 @@
 import { Gender } from "@prisma/client";
 
 type AccountData = {
-	profilePicture: null | string;
+	profilePicture: null | {
+		small: string;
+		medium: string;
+		large: string;
+	};
 	username: string;
 	email: string;
 	phoneNumber: null | string;

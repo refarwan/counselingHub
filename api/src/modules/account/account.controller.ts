@@ -1,7 +1,6 @@
 import { AuthGuard } from "src/guards/auth.guard";
 
 import { AccountService } from "./account.service";
-import { AuthService } from "../auth/auth.service";
 
 import AccountData from "./types/account-data";
 import { AllProvince } from "./types/all-province";
@@ -26,10 +25,7 @@ import { Request, Response } from "express";
 
 @Controller("account")
 export class AccountController {
-	constructor(
-		private readonly accountService: AccountService,
-		private readonly authService: AuthService,
-	) {}
+	constructor(private readonly accountService: AccountService) {}
 
 	@Post("register")
 	async register(@Body() body: RegisterDto): Promise<{ message: string }> {
@@ -39,7 +35,7 @@ export class AccountController {
 	@Get("my-profile")
 	@UseGuards(AuthGuard)
 	async getMyProfile(@Req() request: Request): Promise<AccountData> {
-		return await this.accountService.getAccoutData(request["accountId"]);
+		return await this.accountService.getMyProfile(request["accountId"]);
 	}
 
 	@Get("all-province")
@@ -61,21 +57,14 @@ export class AccountController {
 		files?: {
 			profilePicture?: Express.Multer.File[];
 		},
-	): Promise<{ message: string } | { accessToken: string }> {
-		const refreshToken = request.cookies["refreshToken"] as undefined | string;
-
+	): Promise<{ message: string }> {
 		const result = await this.accountService.editMyAccount({
 			accountId: request["accountId"],
-			newValue: body,
+			data: body,
 			files: files,
-			refreshToken,
 		});
 
-		if (result.reAuthenticate === "accessToken") {
-			return { accessToken: result.accessToken };
-		}
-
-		if (result.reAuthenticate === "all") {
+		if (result.reAuthenticate) {
 			response.clearCookie("refreshToken");
 			return {
 				message: "Berhasil mengedit akun, silakan lakukan authentikasi ulang",

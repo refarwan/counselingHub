@@ -9,7 +9,7 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { JwtModule } from "@nestjs/jwt";
 
 import { redisStore } from "cache-manager-ioredis-yet";
-import { ProfilePictureModule } from './modules/profile-picture/profile-picture.module';
+import { ProfilePictureModule } from "./modules/profile-picture/profile-picture.module";
 
 @Module({
 	imports: [

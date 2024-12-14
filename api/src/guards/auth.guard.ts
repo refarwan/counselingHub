@@ -3,14 +3,11 @@ import { AuthService } from "src/modules/auth/auth.service";
 import {
 	CanActivate,
 	ExecutionContext,
-	ForbiddenException,
-	Inject,
 	Injectable,
 	UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Role } from "@prisma/client";
-import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 import { Request } from "express";
 
@@ -19,7 +16,6 @@ export class AuthGuard implements CanActivate {
 	constructor(
 		private jwtService: JwtService,
 		private authService: AuthService,
-		@Inject(CACHE_MANAGER) private cacheManager: Cache,
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -28,15 +24,6 @@ export class AuthGuard implements CanActivate {
 		if (!token) {
 			throw new UnauthorizedException({ message: "Access token diperlukan" });
 		}
-
-		const blacklistedAccessToken = await this.cacheManager.get(
-			`blacklistedAccessToken:${token}`,
-		);
-
-		if (blacklistedAccessToken)
-			throw new ForbiddenException({
-				message: "Access token tidak berlaku lagi",
-			});
 
 		type Payload = {
 			username: string;
@@ -47,25 +34,22 @@ export class AuthGuard implements CanActivate {
 			exp: number;
 		};
 
-		let payload: null | Payload = null;
+		const payload: Payload | null = await this.jwtService
+			.verifyAsync(token, { secret: process.env.ACCESS_TOKEN_SECRET })
+			.then((result) => result)
+			.catch(() => null);
 
-		try {
-			payload = this.jwtService.verify(token, {
-				secret: process.env.ACCESS_TOKEN_SECRET,
-			}) as Payload;
-		} catch {
+		if (!payload)
 			throw new UnauthorizedException({
 				message: "Access token tidak dapat diverifikasi",
 			});
-		}
 
 		const cacheAccountData = await this.authService.getCacheAccountData(
 			payload.username,
 		);
 		if (!cacheAccountData)
-			throw new ForbiddenException({
-				message:
-					"Access token sudah tidak relevan, silahkan lakukan otentikasi ulang",
+			throw new UnauthorizedException({
+				message: "Access token sudah tidak relevan",
 			});
 
 		request["accountId"] = cacheAccountData.id;

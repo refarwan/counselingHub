@@ -1,5 +1,4 @@
 import { AuthService } from "./auth.service";
-import { AuthGuard } from "src/guards/auth.guard";
 
 import { LoginDto } from "./dto/login.dto";
 
@@ -7,15 +6,12 @@ import {
 	Body,
 	Controller,
 	Delete,
-	ForbiddenException,
 	Get,
 	HttpCode,
-	InternalServerErrorException,
 	Post,
 	Req,
 	Res,
 	UnauthorizedException,
-	UseGuards,
 } from "@nestjs/common";
 
 import { Request, Response } from "express";
@@ -55,31 +51,21 @@ export class AuthController {
 			});
 		const result = await this.authService.getNewAccessToken(refreshToken);
 
-		if (result.status === "serverError")
-			throw new InternalServerErrorException({ message: result.message });
-
-		if (result.status === "forbidden") {
+		if (!result.success) {
 			response.clearCookie("refreshToken");
-			throw new ForbiddenException({ message: result.message });
+			throw new UnauthorizedException({ message: "Refresh token tidak valid" });
 		}
 
-		return { accessToken: result.message };
+		return { accessToken: result.accessToken };
 	}
 
 	@Delete("logout")
-	@UseGuards(AuthGuard)
 	async logout(
 		@Req() request: Request,
 		@Res({ passthrough: true }) response: Response,
 	) {
-		let accessToken = undefined;
-		const authorization = request.headers["authorization"];
-		if (authorization && authorization.startsWith("Bearer ")) {
-			const token = authorization.split(" ")[1];
-			accessToken = token;
-		}
 		const refreshToken = request.cookies["refreshToken"] as undefined | string;
-		await this.authService.logout(refreshToken, accessToken);
+		await this.authService.logout(refreshToken);
 		response.clearCookie("refreshToken");
 		return { message: "Berhasil mengeluarkan akun" };
 	}
