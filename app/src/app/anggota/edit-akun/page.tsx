@@ -24,7 +24,7 @@ interface ProvinceData extends RegencyData {
 }
 
 type AccountData = {
-	profilePicture: null | string;
+	profilePicture: null | { small: string; medium: string; large: string };
 	username: string;
 	email: string;
 	phoneNumber: null | string;
@@ -95,7 +95,9 @@ const Page = () => {
 					const accountData: AccountData = response.data;
 					setAccountDataReady(true);
 
-					setCurrentProfilePicture(accountData.profilePicture);
+					setCurrentProfilePicture(
+						accountData.profilePicture ? accountData.profilePicture.large : null
+					);
 					setUsername(accountData.username);
 					setEmail(accountData.email);
 					setFullname(accountData.fullname);
@@ -133,11 +135,17 @@ const Page = () => {
 			>
 				<div className="flex flex-col gap-[8px] justify-center items-center">
 					{currentProfilePicture ? (
-						<Image src={currentProfilePicture} alt="Profile Picture" />
+						<Image
+							src={currentProfilePicture}
+							alt="Profile Picture"
+							width={150}
+							height={150}
+							className="w-[150px] h-[150px] rounded-full"
+						/>
 					) : (
 						<FaCircleUser size={150} className="fill-slate-400" />
 					)}
-					<button className="filled-button">Ubah Foto</button>
+					<button className=" filled-button">Ubah Foto</button>
 				</div>
 				<TextField
 					type="text"

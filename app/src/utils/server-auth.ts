@@ -1,26 +1,10 @@
 "use server";
 
-import AccountRole from "./types/account-role";
+import { AuthData, DecodedAccessTokenPayload } from "./types/auth-data";
 
 import { cookies } from "next/headers";
 
 import { jwtDecode } from "jwt-decode";
-
-export interface AuthData {
-	username: string;
-	profilePicture: null | string;
-	fullname: string;
-	role: AccountRole;
-}
-
-export interface DecodedAccessTokenPayload extends AuthData {
-	username: "346c0860b82209a9a728e62ca45ad52a";
-	profilePicture: null;
-	fullname: "Refarwan";
-	role: "konseli";
-	iat: number;
-	exp: number;
-}
 
 export const getAuthData = async (): Promise<null | AuthData> => {
 	const accessToken = (await cookies()).get("accessToken");

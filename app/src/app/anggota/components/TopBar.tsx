@@ -4,7 +4,7 @@ import { useAxiosErrorHandling } from "@/app/components/AxiosErrorHandling";
 import { useLoadingBar } from "@/app/components/LoadingBar";
 import { axiosInstanceWithToken } from "@/utils/axios-intance";
 import { deleteAccessToken } from "@/utils/server-auth";
-import AccountRole from "@/utils/types/account-role";
+import { AccountRole } from "@/utils/types/auth-data";
 
 import {
 	createContext,
@@ -29,6 +29,7 @@ import {
 	FaRightFromBracket,
 	FaUserGear,
 } from "react-icons/fa6";
+import Image from "next/image";
 
 type TopBar = {
 	minimizeDesktopNavbar: boolean;
@@ -45,7 +46,11 @@ const TopAppBarProvider = ({
 }: {
 	children: ReactNode;
 	accountData: {
-		profilePicture: null | string;
+		profilePicture: null | {
+			small: string;
+			medium: string;
+			large: string;
+		};
 		fullname: string;
 		role: AccountRole;
 	};
@@ -118,7 +123,17 @@ const TopAppBarProvider = ({
 						setShowAccountMenu((prev) => !prev);
 					}}
 				>
-					<FaCircleUser className="fill-slate-400" size={30} />
+					{accountData.profilePicture ? (
+						<Image
+							alt="Profile Picture"
+							src={accountData.profilePicture.small}
+							className="w-[30px] h-[30px] rounded-full"
+							width={30}
+							height={30}
+						/>
+					) : (
+						<FaCircleUser className="fill-slate-400" size={30} />
+					)}
 				</button>
 				<div
 					className={`
@@ -130,7 +145,17 @@ const TopAppBarProvider = ({
 						href={"/anggota/akun-saya"}
 						className="flex px-[12px] py-[8px] gap-[12px] border-b border-slate-200 base-link"
 					>
-						<FaCircleUser className="fill-slate-400" size={40} />
+						{accountData.profilePicture ? (
+							<Image
+								alt="Profile Picture"
+								src={accountData.profilePicture.small}
+								className="w-[40px] h-[40px] rounded-full"
+								width={40}
+								height={40}
+							/>
+						) : (
+							<FaCircleUser className="fill-slate-400" size={40} />
+						)}
 						<div>
 							<span>{accountData.fullname}</span>
 							<div className="bg-sky-500 text-white w-max px-[8px] rounded-[4px]">

@@ -11,9 +11,10 @@ import { useCallback, useEffect, useState } from "react";
 import { FaCircleUser } from "react-icons/fa6";
 import { AxiosError } from "axios";
 import { DateTime } from "luxon";
+import Image from "next/image";
 
 type AccountData = {
-	profilePicture: null | string;
+	profilePicture: null | { small: string; medium: string; large: string };
 	username: string;
 	email: string;
 	phoneNumber: null | string;
@@ -66,7 +67,17 @@ const Page = () => {
 		<TemplateMain>
 			<div className="flex flex-col gap-[16px] px-[24px] py-[16px] m-auto sm:w-[650px] sm:px-0">
 				<div className="flex flex-col gap-[2px] justify-center items-center">
-					<FaCircleUser size={150} className="fill-slate-400" />
+					{accountData.profilePicture ? (
+						<Image
+							alt="Profile Picture"
+							src={accountData.profilePicture.small}
+							className="w-[150px] h-[150px] rounded-full"
+							width={150}
+							height={150}
+						/>
+					) : (
+						<FaCircleUser className="fill-slate-400" size={150} />
+					)}
 					<div className="font-semibold text-[20px]">
 						{accountData.fullname}
 					</div>
